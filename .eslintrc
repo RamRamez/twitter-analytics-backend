@@ -1,0 +1,76 @@
+{
+  "plugins": [
+    "import",
+    "unused-imports"
+  ],
+  "extends": [
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "no-use-before-define": ["error", {"functions": false, "classes": false, "variables": false}],
+    "import/order": ["error", {
+      "groups": ["builtin", "external", ["internal", "parent", "sibling"], "index", "object", "type"]
+    }],
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "import/named": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "no-param-reassign": [
+      2,
+      {
+        "props": false
+      }
+    ],
+    "no-underscore-dangle": 0,
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "useTabs": true,
+      "tabWidth": 4,
+      "semi": true,
+      "jsxSingleQuote": true,
+      "trailingComma": "all",
+      "arrowParens": "avoid",
+      "endOfLine": "auto",
+      "printWidth": 100
+    }]
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  },
+  "globals": {
+    "FileReader": true,
+    "window": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src/"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
