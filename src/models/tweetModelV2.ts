@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
+import { model, Schema } from 'mongoose';
 
 const imageModel = new Schema({
 	url: { type: String, required: true },
@@ -101,6 +99,6 @@ const tweetsModelV2 = new Schema({
 	edit_history_tweet_ids: { type: [String], required: false },
 });
 
-const tweetsV2 = mongoose.model('tweetsModelV2', tweetsModelV2, 'tweets');
+const tweetsV2 = model('tweetsModelV2', tweetsModelV2, 'tweets');
 
 module.exports = tweetsV2;

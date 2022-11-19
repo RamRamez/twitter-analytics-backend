@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
+import { model, Schema } from 'mongoose';
 
 const urlModel = new Schema({
 	start: { type: Number, required: true },
@@ -54,6 +52,6 @@ const userModelV2 = new Schema({
 	withheld: { type: Object, required: false },
 });
 
-const userV2 = mongoose.model('userModelV2', userModelV2, 'users');
+const userV2 = model('userModelV2', userModelV2, 'users');
 
 module.exports = userV2;

@@ -1,13 +1,14 @@
-import mongoose from 'mongoose';
+import { rootRouter } from './routers/rootRouter.index';
+import routes from './routes';
+require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const session = require('express-session')
-const parseurl = require('parseurl')
-const MongoStore = require('connect-mongo')(session)
+const MongoStore = require('connect-mongo')
 const { v4: uuidv4 } = require('uuid')
 
-const { BACKEND_PORT, FRONTEND_URL, SESSION_SECRET } = process.env;
+const { DB_URI, BACKEND_PORT, FRONTEND_URL, SESSION_SECRET } = process.env;
 
 export async function App() {
 	const app = express()
@@ -27,7 +28,10 @@ export async function App() {
 		secret: SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		store: new MongoStore({ mongooseConnection: mongoose.connection })
+		store: MongoStore.create({ mongoUrl: DB_URI })
 	}))
-	console.log('App is running on port', BACKEND_PORT)
+	app.use(routes.root, rootRouter)
+	app.listen(BACKEND_PORT, () => {
+		console.log(`Backend is listening on port: ${BACKEND_PORT}`)
+	})
 }

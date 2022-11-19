@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
+import { model, Schema } from 'mongoose';
 
 const systemUsers = new Schema({
 	name: { type: String, required: true },
@@ -10,6 +8,6 @@ const systemUsers = new Schema({
 	expiration: { type: Date, required: false },
 });
 
-const userSchema = mongoose.model('systemUsers', systemUsers, 'systemUsers');
+const userSchema = model('systemUsers', systemUsers, 'systemUsers');
 
 module.exports = userSchema;

@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
+import { model, Schema } from 'mongoose';
 
 const variantModel = new Schema({
 	bit_rate: { type: Number, required: false },
@@ -25,6 +23,6 @@ const mediaModelV2 = new Schema({
 	public_metrics: { type: publicMetricsModel, required: false },
 });
 
-const mediaV2 = mongoose.model('mediaModelV2', mediaModelV2, 'media');
+const mediaV2 = model('mediaModelV2', mediaModelV2, 'media');
 
 module.exports = mediaV2;

@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
+import { model, Schema } from 'mongoose';
 
 const userActivity = new Schema({
 	username: { type: String, required: true },
@@ -12,6 +10,6 @@ const userActivity = new Schema({
 	ip: { type: String, required: true },
 });
 
-const twSchema = mongoose.model('userActivity', userActivity, 'userActivity');
+const twSchema = model('userActivity', userActivity, 'userActivity');
 
 module.exports = twSchema;
