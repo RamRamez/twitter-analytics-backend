@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { formatResponse } from '../lib/helpers';
 
 export const isSignedInRouter = Router();
 
@@ -6,10 +7,9 @@ isSignedInRouter.get('/', (req, res) => {
 	if (req.session.user) {
 		res.send({
 			name: req.session.user.name,
-			role: req.session.user.role
-		})
+			role: req.session.user.role,
+		});
+	} else {
+		res.status(401).send(formatResponse('You are not signed in'));
 	}
-	else {
-		res.status(401).send('Please Sign in')
-	}
-})
+});

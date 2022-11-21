@@ -1,4 +1,4 @@
-const rootRoute = '/'
+const rootRoute = '/';
 
 const routes = {
 	root: rootRoute,
@@ -7,14 +7,15 @@ const routes = {
 	logout: rootRoute + 'logout',
 	admin: rootRoute + 'admin',
 	dashboard: rootRoute + 'dashboard',
-}
+};
 
 export const adminRoutes = {
 	addUser: '/addUser',
-}
+};
 
 export const dashboardRoutes = {
-	general: '/general',
-}
+	general: '/',
+	mostInfluentialTweets: '/mostInfluentialTweets',
+};
 
-export default routes
+export default routes;

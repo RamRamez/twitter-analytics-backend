@@ -82,21 +82,21 @@ const referencedTweetModel = new Schema({
 });
 
 const tweetsModelV2 = new Schema({
+	attachments: { type: attachmentsModel, required: false },
+	author_id: { type: String, required: false },
+	context_annotations: { type: [contextAnnotationModel], required: false },
+	conversation_id: { type: String, required: false },
+	created_at: { type: Date, required: false },
+	edit_history_tweet_ids: { type: [String], required: false },
 	entities: { type: entitiesModel, required: false },
 	id: { type: String, required: true },
-	conversation_id: { type: String, required: false },
 	lang: { type: String, required: false },
-	attachments: { type: attachmentsModel, required: false },
-	public_metrics: { type: publicMetricsModel, required: false },
-	author_id: { type: String, required: false },
-	text: { type: String, required: false },
-	created_at: { type: Date, required: false },
-	referenced_tweets: { type: [referencedTweetModel], required: false },
-	context_annotations: { type: [contextAnnotationModel], required: false },
 	possibly_sensitive: { type: Boolean, required: false },
+	public_metrics: { type: publicMetricsModel, required: false },
+	referenced_tweets: { type: [referencedTweetModel], required: false },
 	reply_settings: { type: String, required: false },
 	source: { type: String, required: false },
-	edit_history_tweet_ids: { type: [String], required: false },
+	text: { type: String, required: false },
 });
 
 const tweetsV2 = model('tweetsModelV2', tweetsModelV2, 'tweets');

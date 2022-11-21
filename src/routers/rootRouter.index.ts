@@ -10,10 +10,10 @@ import { dashboardRouter } from './dashboardRouter';
 
 export const rootRouter = Router();
 
-rootRouter.use(routes.isSignedIn, isSignedInRouter)
-rootRouter.use(routes.login, loginRouter)
-rootRouter.use(middleware)
-rootRouter.use(routes.logout, logoutRouter)
-rootRouter.use(routes.admin, adminMiddleware)
-rootRouter.use(routes.admin, adminRouter)
-rootRouter.use(routes.dashboard, dashboardRouter)
+rootRouter.use(routes.isSignedIn, isSignedInRouter);
+rootRouter.use(routes.login, loginRouter);
+rootRouter.use(middleware);
+rootRouter.use(routes.logout, logoutRouter);
+rootRouter.use(routes.admin, adminMiddleware);
+rootRouter.use(routes.admin, adminRouter);
+rootRouter.use(routes.dashboard, dashboardRouter);
