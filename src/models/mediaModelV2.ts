@@ -11,7 +11,7 @@ const publicMetricsModel = new Schema({
 });
 
 const mediaModelV2 = new Schema({
-	media_key: { type: String, required: false },
+	media_key: { type: String, required: false, unique: true },
 	url: { type: String, required: false },
 	type: { type: String, required: false },
 	preview_image_url: { type: String, required: false },

@@ -1,5 +1,5 @@
 const parseurl = require('parseurl');
-const UserActivity = require('../models/userActivity');
+const UserActivity = require('../../models/userActivity');
 
 let usersQueries = [];
 const saveQueriesInterval = 1000 * 60 * 60; // 1 hour

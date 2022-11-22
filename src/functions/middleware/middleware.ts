@@ -1,4 +1,4 @@
-import { catchQueries } from '../saveQueries';
+import { catchQueries } from '../saveToDB/saveQueries';
 import { formatResponse } from '../../lib/helpers';
 
 function middleware(req, res, next) {

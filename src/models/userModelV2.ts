@@ -36,7 +36,7 @@ const publicMetricsModel = new Schema({
 });
 
 const userModelV2 = new Schema({
-	id: { type: String, required: true },
+	id: { type: String, required: true, unique: true },
 	name: { type: String, required: true },
 	username: { type: String, required: true },
 	created_at: { type: Date, required: true },

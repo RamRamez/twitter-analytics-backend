@@ -1,4 +1,6 @@
 import { model, Schema } from 'mongoose';
+// const mongoose = require('mongoose');
+// const { Schema, model } = mongoose;
 
 const imageModel = new Schema({
 	url: { type: String, required: true },
@@ -81,15 +83,22 @@ const referencedTweetModel = new Schema({
 	id: { type: String, required: false },
 });
 
+const authorModel = new Schema({
+	id: { type: String, required: true, unique: true },
+	username: { type: String, required: true },
+	profile_image_url: { type: String, required: true },
+	name: { type: String, required: true },
+});
+
 const tweetsModelV2 = new Schema({
 	attachments: { type: attachmentsModel, required: false },
-	author_id: { type: String, required: false },
+	author: { type: authorModel, required: false },
 	context_annotations: { type: [contextAnnotationModel], required: false },
 	conversation_id: { type: String, required: false },
 	created_at: { type: Date, required: false },
 	edit_history_tweet_ids: { type: [String], required: false },
 	entities: { type: entitiesModel, required: false },
-	id: { type: String, required: true },
+	id: { type: String, required: true, unique: true },
 	lang: { type: String, required: false },
 	possibly_sensitive: { type: Boolean, required: false },
 	public_metrics: { type: publicMetricsModel, required: false },

@@ -5,6 +5,7 @@ import uniqueUsers from '../functions/db/users/uniqueUsers';
 import uniqueHashtagsCount from '../functions/db/tweets/uniqueHashtagsCount';
 import hashtagsAbundance from '../functions/db/tweets/hashtagsAbundance';
 import mostInfluentialTweets from '../functions/db/tweets/mostInfluentialTweets';
+import getMedia from '../functions/db/media/getMedia';
 
 export const dashboardRouter = Router();
 
@@ -25,8 +26,16 @@ dashboardRouter.get(dashboardRoutes.general, async (req: Request, res: Response)
 	res.status(200).send(dashboardObject);
 });
 
-dashboardRouter.get(dashboardRoutes.mostInfluentialTweets, async (req: Request, res: Response) => {
-	const { timeRange, sortBy } = req.query;
-	const influentialTweets = await mostInfluentialTweets(timeRange, sortBy);
-	res.status(200).send(influentialTweets);
-});
+dashboardRouter.get(
+	dashboardRoutes.mostInfluentialTweets,
+	async (req: Request, res: Response) => {
+		const { timeRange, sortBy } = req.query;
+		const influentialTweets = await mostInfluentialTweets(timeRange, sortBy);
+		const mediaKeys = influentialTweets
+			.filter(t => t.attachments)
+			.map(t => t.attachments.media_keys)
+			.flat();
+		const media = await getMedia(mediaKeys);
+		res.status(200).send({ influentialTweets, media });
+	},
+);
