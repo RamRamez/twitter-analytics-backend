@@ -16,6 +16,7 @@ export const adminRoutes = {
 export const dashboardRoutes = {
 	general: '/',
 	mostInfluentialTweets: '/mostInfluentialTweets',
+	socialNetwork: '/socialNetwork',
 };
 
 export default routes;

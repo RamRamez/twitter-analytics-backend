@@ -6,6 +6,9 @@ import uniqueHashtagsCount from '../functions/db/tweets/uniqueHashtagsCount';
 import hashtagsAbundance from '../functions/db/tweets/hashtagsAbundance';
 import mostInfluentialTweets from '../functions/db/tweets/mostInfluentialTweets';
 import getMedia from '../functions/db/media/getMedia';
+import userIds from '../functions/db/users/userIds';
+import referencedTweetsIds from '../functions/db/tweets/referencedTweetsIds';
+import findSocialNetwork from '../functions/db/tweets/findSocialNetwork';
 
 export const dashboardRouter = Router();
 
@@ -30,7 +33,8 @@ dashboardRouter.get(
 	dashboardRoutes.mostInfluentialTweets,
 	async (req: Request, res: Response) => {
 		const { timeRange, sortBy } = req.query;
-		const influentialTweets = await mostInfluentialTweets(timeRange, sortBy);
+		const userIDs = await userIds();
+		const influentialTweets = await mostInfluentialTweets(timeRange, sortBy, userIDs);
 		const mediaKeys = influentialTweets
 			.filter(t => t.attachments)
 			.map(t => t.attachments.media_keys)
@@ -39,3 +43,10 @@ dashboardRouter.get(
 		res.status(200).send({ influentialTweets, media });
 	},
 );
+
+dashboardRouter.get(dashboardRoutes.socialNetwork, async (req: Request, res: Response) => {
+	const { timeRange, type } = req.query;
+	const referencedIds = await referencedTweetsIds(timeRange, type);
+	const socialNetwork = await findSocialNetwork(referencedIds);
+	res.status(200).send(socialNetwork);
+})

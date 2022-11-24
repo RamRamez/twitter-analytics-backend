@@ -8,6 +8,7 @@ const Tweets = require('../../../models/tweetModelV2');
 export default async function mostInfluentialTweets(
 	time,
 	type = EPublicMetrics.retweet_count,
+	userIDs,
 	limit = 10,
 ): Promise<ITweet[]> {
 	const created_at = dbTimeRange(time);
@@ -16,12 +17,11 @@ export default async function mostInfluentialTweets(
 		{
 			$match: {
 				created_at,
+				'author.id': { $in: userIDs },
 				$or: [
 					{ referenced_tweets: { $size: 0 } },
 					{
-						'referenced_tweets.type': {
-							$ne: EReferencedTweetsType.retweeted,
-						},
+						'referenced_tweets.type': { $in: [EReferencedTweetsType.replied_to, EReferencedTweetsType.quoted]},
 					},
 				],
 			},
