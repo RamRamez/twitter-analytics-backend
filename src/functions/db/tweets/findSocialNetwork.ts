@@ -5,7 +5,7 @@ export default async function findSocialNetwork(tweetIds: string[], limit = 10) 
 		{
 			$match: {
 				id: { $in: tweetIds },
-			}
+			},
 		},
 		{ $group: { _id: '$author.username', count: { $sum: 1 } } },
 		{ $sort: { count: -1 } },

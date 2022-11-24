@@ -21,7 +21,12 @@ export default async function mostInfluentialTweets(
 				$or: [
 					{ referenced_tweets: { $size: 0 } },
 					{
-						'referenced_tweets.type': { $in: [EReferencedTweetsType.replied_to, EReferencedTweetsType.quoted]},
+						'referenced_tweets.type': {
+							$in: [
+								EReferencedTweetsType.replied_to,
+								EReferencedTweetsType.quoted,
+							],
+						},
 					},
 				],
 			},

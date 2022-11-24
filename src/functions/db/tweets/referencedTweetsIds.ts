@@ -3,7 +3,10 @@ import { EReferencedTweetsType } from '../../../types/referencedTweetsType';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function referencedTweetsIds(time, type = EReferencedTweetsType.retweeted) {
+export default async function referencedTweetsIds(
+	time,
+	type = EReferencedTweetsType.retweeted,
+) {
 	const created_at = dbTimeRange(time);
 	// TODO: a tweet maybe referenced by multiple tweets. It affects social network analysis.
 	const objArray = await Tweets.aggregate([
@@ -16,5 +19,5 @@ export default async function referencedTweetsIds(time, type = EReferencedTweets
 		},
 		{ $group: { _id: '$referenced_tweets.id' } },
 	]);
-	return objArray.map((tweet) => tweet._id);
+	return objArray.map(tweet => tweet._id);
 }

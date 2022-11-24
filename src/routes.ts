@@ -17,6 +17,9 @@ export const dashboardRoutes = {
 	general: '/',
 	mostInfluentialTweets: '/mostInfluentialTweets',
 	socialNetwork: '/socialNetwork',
+	tweetsTypes: '/tweetsTypes',
+	tweetsLanguages: '/tweetsLanguages',
+	tweetsTimeRange: '/tweetsTime',
 };
 
 export default routes;
