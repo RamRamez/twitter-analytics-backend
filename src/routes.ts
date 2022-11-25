@@ -19,7 +19,9 @@ export const dashboardRoutes = {
 	socialNetwork: '/socialNetwork',
 	tweetsTypes: '/tweetsTypes',
 	tweetsLanguages: '/tweetsLanguages',
-	tweetsTimeRange: '/tweetsTime',
+	tweetsMonthly: '/tweetsMonthly',
+	tweetsHourly: '/tweetsHourly',
+	tweetsSource: '/tweetsSource',
 };
 
 export default routes;

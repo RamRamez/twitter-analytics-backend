@@ -11,7 +11,9 @@ import referencedTweetsIds from '../functions/db/tweets/referencedTweetsIds';
 import findSocialNetwork from '../functions/db/tweets/findSocialNetwork';
 import tweetsTypes from '../functions/db/tweets/tweetsTypes';
 import tweetsLanguages from '../functions/db/tweets/tweetsLanguages';
-import tweetsTimeRange from '../functions/db/tweets/tweetsTimeRange';
+import tweetsMonthly from '../functions/db/tweets/tweetsMonthly';
+import tweetsHourly from '../functions/db/tweets/tweetsHourly';
+import tweetsSource from '../functions/db/tweets/tweetsSource';
 
 export const dashboardRouter = Router();
 
@@ -69,8 +71,20 @@ dashboardRouter.get(dashboardRoutes.tweetsLanguages, async (req: Request, res: R
 	res.status(200).send(languages);
 })
 
-dashboardRouter.get(dashboardRoutes.tweetsTimeRange, async (req: Request, res: Response) => {
+dashboardRouter.get(dashboardRoutes.tweetsMonthly, async (req: Request, res: Response) => {
 	const { timeRange } = req.query;
-	const count = await tweetsTimeRange(timeRange);
-	res.status(200).send({ count });
+	const monthly = await tweetsMonthly(timeRange);
+	res.status(200).send(monthly);
+})
+
+dashboardRouter.get(dashboardRoutes.tweetsHourly, async (req: Request, res: Response) => {
+	const { timeRange } = req.query;
+	const hourly = await tweetsHourly(timeRange);
+	res.status(200).send(hourly);
+})
+
+dashboardRouter.get(dashboardRoutes.tweetsSource, async (req: Request, res: Response) => {
+	const { timeRange } = req.query;
+	const source = await tweetsSource(timeRange);
+	res.status(200).send(source);
 })

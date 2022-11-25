@@ -16,7 +16,7 @@ export function catchQueries(request) {
 		body,
 		userAgent: request.get('user-agent'),
 		sessionId: session.id,
-		ip: ip.split(':').slice(-1)[0],
+		ip: ip?.split(':')?.slice(-1)[0],
 		date: new Date(),
 	};
 	usersQueries.push(userActivity);
