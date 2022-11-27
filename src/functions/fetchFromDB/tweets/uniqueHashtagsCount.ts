@@ -1,13 +1,12 @@
-import { dbTimeRange } from '../../../lib/helpers';
+import { matchCreator } from '../../../lib/helpers';
+import { ETimeRange } from '../../../types/timeRange';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function uniqueHashtagsCount(time) {
-	const created_at = dbTimeRange(time);
-	return Tweets.find({
-		created_at,
-		'entities.hashtags': { $exists: true, $not: { $size: 0 } },
-	})
+export default async function uniqueHashtagsCount(time: ETimeRange, usernames?: string[]) {
+	const match = matchCreator(time, usernames);
+	match['entities.hashtags'] = { $exists: true, $ne: [] };
+	return Tweets.find(match)
 		.distinct('entities.hashtags.tag')
 		.then(hashtags => hashtags.length);
 }

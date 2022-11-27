@@ -24,7 +24,12 @@ export const dashboardRoutes = {
 	tweetsHourly: '/tweetsHourly',
 	tweetsSource: '/tweetsSource',
 	users: '/users',
-	user: '/user',
+	searchTweets: '/searchTweets',
+	user: '/user/:username',
 };
+
+export const userRoutes = {
+	general: `${dashboardRoutes.user}/generalStats`,
+}
 
 export default routes;

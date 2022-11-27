@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { dashboardRoutes } from '../routes';
+import { dashboardRoutes, userRoutes } from '../routes';
 import tweetCount from '../functions/fetchFromDB/tweets/tweetCount';
 import usersCount from '../functions/fetchFromDB/users/usersCount';
 import uniqueHashtagsCount from '../functions/fetchFromDB/tweets/uniqueHashtagsCount';
@@ -16,6 +16,9 @@ import tweetsHourly from '../functions/fetchFromDB/tweets/tweetsHourly';
 import tweetsSource from '../functions/fetchFromDB/tweets/tweetsSource';
 import usersList from '../functions/fetchFromDB/users/usersList';
 import getUser from '../functions/fetchFromDB/users/getUser';
+import getTweet from '../functions/fetchFromDB/tweets/getTweet';
+import publicMetricsAverage from '../functions/fetchFromDB/tweets/publicMetricsAverage';
+import searchTweets from '../functions/fetchFromDB/tweets/searchTweets';
 
 export const dashboardRouter = Router();
 
@@ -108,8 +111,41 @@ dashboardRouter.get(dashboardRoutes.users, async (req: Request, res: Response) =
 	res.status(200).send(users);
 })
 
-dashboardRouter.get(`${dashboardRoutes.user}/:username`, async (req: Request, res: Response) => {
+dashboardRouter.get(dashboardRoutes.searchTweets, async (req: Request, res: Response) => {
+	const { timeRange, users, search } = req.query;
+	const userArray = users?.split(',');
+	const results = await searchTweets(timeRange, userArray, search);
+	res.status(200).send(results);
+})
+
+dashboardRouter.get(dashboardRoutes.user, async (req: Request, res: Response) => {
 	const { username } = req.params;
 	const user = await getUser(username);
-	res.status(200).send(user);
+	if (user.pinned_tweet_id) {
+		const pinnedTweet = await getTweet(user.pinned_tweet_id);
+		const mediaKeys = pinnedTweet.attachments?.media_keys
+		if (mediaKeys) {
+			const media = await getMedia(mediaKeys);
+			res.status(200).send({ user, pinnedTweet, media });
+		} else {
+			res.status(200).send({ user, pinnedTweet });
+		}
+	}
+	else res.status(200).send({ user });
+})
+
+dashboardRouter.get(userRoutes.general, async (req: Request, res: Response) => {
+	const { username } = req.params;
+	const { timeRange } = req.query;
+	const dashboardArray = await Promise.all([
+		tweetCount(timeRange, [username]),
+		uniqueHashtagsCount(timeRange, [username]),
+		publicMetricsAverage(timeRange, [username]),
+	]);
+	const dashboardObject = {
+		tweetCount: dashboardArray[0],
+		uniqueHashtagsCount: dashboardArray[1],
+		publicMetricsAverage: dashboardArray[2],
+	};
+	res.status(200).send(dashboardObject);
 })

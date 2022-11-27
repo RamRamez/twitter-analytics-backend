@@ -22,13 +22,16 @@ export function dbTimeRange(time: ETimeRange) {
 	return { $gte: new Date(d) };
 }
 
-export function matchCreator(time?: ETimeRange, users?: string[]) {
+export function matchCreator(time?: ETimeRange, users?: string[], search?: string) {
 	const match: any = {};
 	if (time && time !== ETimeRange.all) {
 		match.created_at = dbTimeRange(time);
 	}
 	if (users?.length > 0) {
 		match['author.username'] = { $in: users };
+	}
+	if (search) {
+		match.$text = { $search: search };
 	}
 	return match;
 }

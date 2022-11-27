@@ -1,8 +1,9 @@
-import { dbTimeRange } from '../../../lib/helpers';
+import { matchCreator } from '../../../lib/helpers';
+import { ETimeRange } from '../../../types/timeRange';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function tweetCount(time) {
-	const created_at = dbTimeRange(time);
-	return Tweets.countDocuments({ created_at });
+export default async function tweetCount(time: ETimeRange, usernames?: string[]) {
+	const match = matchCreator(time, usernames);
+	return Tweets.countDocuments(match);
 }
