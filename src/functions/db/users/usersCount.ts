@@ -1,5 +1,5 @@
 const Users = require('../../../models/userModelV2');
 
-export default async function uniqueUsers() {
+export default async function usersCount() {
 	return Users.countDocuments();
 }

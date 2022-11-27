@@ -15,6 +15,7 @@ export const adminRoutes = {
 
 export const dashboardRoutes = {
 	general: '/',
+	hashtagsAbundance: '/hashtagsAbundance',
 	mostInfluentialTweets: '/mostInfluentialTweets',
 	socialNetwork: '/socialNetwork',
 	tweetsTypes: '/tweetsTypes',
@@ -22,6 +23,7 @@ export const dashboardRoutes = {
 	tweetsMonthly: '/tweetsMonthly',
 	tweetsHourly: '/tweetsHourly',
 	tweetsSource: '/tweetsSource',
+	users: '/users',
 };
 
 export default routes;

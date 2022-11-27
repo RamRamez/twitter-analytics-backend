@@ -1,13 +1,13 @@
-import dbTimeRange from '../dbTimeRange';
 import countTweetOnly from './countTweetOnly';
+import { matchCreator } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function tweetsTypes(time) {
-	const created_at = dbTimeRange(time);
+export default async function tweetsTypes(time, usernames) {
+	const $match = matchCreator(time, usernames);
 	const tweetOnly = await countTweetOnly(time);
 	const referenced = await Tweets.aggregate([
-		{ $match: { created_at } },
+		{ $match },
 		{ $unwind: '$referenced_tweets' },
 		{ $group: { _id: '$referenced_tweets.type', count: { $sum: 1 } } },
 		{ $project: { _id: 0, type: '$_id', count: 1 } },

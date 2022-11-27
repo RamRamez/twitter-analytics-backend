@@ -4,4 +4,5 @@ export enum ETimeRange {
 	threeMonth = '3month',
 	halfYear = 'halfYear',
 	year = 'year',
+	all = 'all',
 }

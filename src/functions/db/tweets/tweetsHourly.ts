@@ -1,13 +1,11 @@
-import dbTimeRange from '../dbTimeRange';
+import { matchCreator } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function tweetsHourly(time) {
-	const created_at = dbTimeRange(time);
+export default async function tweetsHourly(time, usernames) {
+	const $match = matchCreator(time, usernames);
 	return Tweets.aggregate([
-		{
-			$match: { created_at }
-		},
+		{ $match },
 		{
 			$project: {
 				_id: 0,

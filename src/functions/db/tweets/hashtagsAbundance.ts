@@ -1,16 +1,12 @@
-import dbTimeRange from '../dbTimeRange';
+import { matchCreator } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function hashtagsAbundance(time, limit = 10) {
-	const created_at = dbTimeRange(time);
+export default async function hashtagsAbundance(time, users, limit = 10) {
+	const $match = matchCreator(time, users);
+	$match['entities.hashtags'] = { $exists: true, $ne: [] };
 	return Tweets.aggregate([
-		{
-			$match: {
-				created_at,
-				'entities.hashtags': { $exists: true, $not: { $size: 0 } },
-			},
-		},
+		{ $match },
 		{ $unwind: '$entities.hashtags' },
 		{ $group: { _id: '$entities.hashtags.tag', count: { $sum: 1 } } },
 		{ $sort: { count: -1 } },
