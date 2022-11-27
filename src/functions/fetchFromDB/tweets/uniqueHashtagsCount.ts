@@ -1,4 +1,4 @@
-import dbTimeRange from '../dbTimeRange';
+import { dbTimeRange } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 

@@ -1,20 +1,21 @@
 import { Request, Response, Router } from 'express';
 import { dashboardRoutes } from '../routes';
-import tweetCount from '../functions/db/tweets/tweetCount';
-import usersCount from '../functions/db/users/usersCount';
-import uniqueHashtagsCount from '../functions/db/tweets/uniqueHashtagsCount';
-import hashtagsAbundance from '../functions/db/tweets/hashtagsAbundance';
-import mostInfluentialTweets from '../functions/db/tweets/mostInfluentialTweets';
-import getMedia from '../functions/db/media/getMedia';
-import getUsernames from '../functions/db/users/getUsernames';
-import referencedTweetsIds from '../functions/db/tweets/referencedTweetsIds';
-import findSocialNetwork from '../functions/db/tweets/findSocialNetwork';
-import tweetsTypes from '../functions/db/tweets/tweetsTypes';
-import tweetsLanguages from '../functions/db/tweets/tweetsLanguages';
-import tweetsMonthly from '../functions/db/tweets/tweetsMonthly';
-import tweetsHourly from '../functions/db/tweets/tweetsHourly';
-import tweetsSource from '../functions/db/tweets/tweetsSource';
-import usersList from '../functions/db/users/usersList';
+import tweetCount from '../functions/fetchFromDB/tweets/tweetCount';
+import usersCount from '../functions/fetchFromDB/users/usersCount';
+import uniqueHashtagsCount from '../functions/fetchFromDB/tweets/uniqueHashtagsCount';
+import hashtagsAbundance from '../functions/fetchFromDB/tweets/hashtagsAbundance';
+import mostInfluentialTweets from '../functions/fetchFromDB/tweets/mostInfluentialTweets';
+import getMedia from '../functions/fetchFromDB/media/getMedia';
+import getUsernames from '../functions/fetchFromDB/users/getUsernames';
+import referencedTweetsIds from '../functions/fetchFromDB/tweets/referencedTweetsIds';
+import findSocialNetwork from '../functions/fetchFromDB/tweets/findSocialNetwork';
+import tweetsTypes from '../functions/fetchFromDB/tweets/tweetsTypes';
+import tweetsLanguages from '../functions/fetchFromDB/tweets/tweetsLanguages';
+import tweetsMonthly from '../functions/fetchFromDB/tweets/tweetsMonthly';
+import tweetsHourly from '../functions/fetchFromDB/tweets/tweetsHourly';
+import tweetsSource from '../functions/fetchFromDB/tweets/tweetsSource';
+import usersList from '../functions/fetchFromDB/users/usersList';
+import getUser from '../functions/fetchFromDB/users/getUser';
 
 export const dashboardRouter = Router();
 
@@ -105,4 +106,10 @@ dashboardRouter.get(dashboardRoutes.tweetsHourly, async (req: Request, res: Resp
 dashboardRouter.get(dashboardRoutes.users, async (req: Request, res: Response) => {
 	const users = await usersList();
 	res.status(200).send(users);
+})
+
+dashboardRouter.get(`${dashboardRoutes.user}/:username`, async (req: Request, res: Response) => {
+	const { username } = req.params;
+	const user = await getUser(username);
+	res.status(200).send(user);
 })
