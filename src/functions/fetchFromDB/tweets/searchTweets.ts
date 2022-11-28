@@ -5,5 +5,5 @@ const Tweets = require('../../../models/tweetModelV2');
 
 export default async function searchTweets(time: ETimeRange, usernames?: string[], search?: string) {
 	const match = matchCreator(time, usernames, search);
-	return Tweets.find(match);
+	return Tweets.find(match).limit(20);
 }
