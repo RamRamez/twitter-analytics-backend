@@ -27,6 +27,7 @@ export const dashboardRoutes = {
 	searchTweets: '/searchTweets',
 	user: '/user/:username',
 	wordsWar: '/wordsWar',
+	wordCloud: '/wordCloud',
 };
 
 export const userRoutes = {

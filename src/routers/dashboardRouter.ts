@@ -20,6 +20,7 @@ import getTweet from '../functions/fetchFromDB/tweets/getTweet';
 import publicMetricsAverage from '../functions/fetchFromDB/tweets/publicMetricsAverage';
 import searchTweets from '../functions/fetchFromDB/tweets/searchTweets';
 import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
+import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
 
 export const dashboardRouter = Router();
 
@@ -178,4 +179,12 @@ dashboardRouter.get(dashboardRoutes.wordsWar, async (req: Request, res: Response
 	const wordsWarArray = await Promise.all(promises);
 	const result = wordsWarArray.map((w, i) => ({ word: searchArray[i], wordsWar: w }));
 	res.status(200).send(result);
+})
+
+dashboardRouter.get(dashboardRoutes.wordCloud, async (req: Request, res: Response) => {
+	const { users, search, tweetTypes, fromDate, toDate } = req.query;
+	const userArray = users?.split(',');
+	const tweetTypesArray = tweetTypes?.split(',');
+	const cloud = await wordCloud(userArray, search, fromDate, toDate, tweetTypesArray);
+	res.status(200).send(cloud);
 })
