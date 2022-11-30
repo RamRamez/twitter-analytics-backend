@@ -6,6 +6,6 @@ export default async function countTweetOnly(time) {
 	const created_at = dbTimeRange(time);
 	return Tweets.countDocuments({
 		created_at,
-		referenced_tweets: { $size: 0 }
+		referenced_tweets: { $size: 0 },
 	});
 }

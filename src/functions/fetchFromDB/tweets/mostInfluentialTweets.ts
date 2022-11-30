@@ -1,7 +1,7 @@
 import { EPublicMetrics } from '../../../types/publicMetrics';
-import { EReferencedTweetsType } from '../../../types/referencedTweetsType';
+import { EReferencedTweetsType, TTweetOnly } from '../../../types/referencedTweetsType';
 import { ITweet } from '../../../types/tweet';
-import { matchCreator } from '../../../lib/helpers';
+import { matchCreator, sortByCreator } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 
@@ -11,22 +11,8 @@ export default async function mostInfluentialTweets(
 	usernames,
 	limit = 10,
 ): Promise<ITweet[]> {
-	const $match = matchCreator(time, usernames);
-	$match['$or'] = [
-		{ referenced_tweets: { $size: 0 } },
-		{
-			'referenced_tweets.type': {
-				$in: [
-					EReferencedTweetsType.replied_to,
-					EReferencedTweetsType.quoted,
-				],
-			},
-		},
-	]
-	const sortBy = `public_metrics.${type}`;
-	return Tweets.aggregate([
-		{ $match },
-		{ $sort: { [sortBy]: -1 } },
-		{ $limit: limit },
-	]);
+	const tweetTypes = [EReferencedTweetsType.replied_to, EReferencedTweetsType.quoted, TTweetOnly.tweet];
+	const $match = matchCreator(time, usernames, undefined, undefined, undefined, tweetTypes);
+	const $sort = sortByCreator(type);
+	return Tweets.aggregate([{ $match }, { $sort }, { $limit: limit }]);
 }

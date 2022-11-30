@@ -2,14 +2,14 @@ const parseurl = require('parseurl');
 const UserActivity = require('../../models/userActivity');
 
 let usersQueries = [];
-const saveQueriesInterval = 1000 * 60 * 60; // 1 hour
+const saveQueriesInterval = 1000 * 60; // 1 hour
 
 // Catch user queries in temp var for future saving
 export function catchQueries(request) {
 	const { body, session, headers, connection } = request;
 	const url = parseurl(request);
 	const query = decodeURI(url.search ? url.pathname + url.search : url.pathname);
-	const ip = headers['x-forwarded-for'] || connection.remoteAddress;
+	const ip = headers['x-forwarded-for'] || connection?.remoteAddress;
 	const userActivity = {
 		username: session.user.username,
 		query,

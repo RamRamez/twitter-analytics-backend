@@ -19,6 +19,7 @@ import getUser from '../functions/fetchFromDB/users/getUser';
 import getTweet from '../functions/fetchFromDB/tweets/getTweet';
 import publicMetricsAverage from '../functions/fetchFromDB/tweets/publicMetricsAverage';
 import searchTweets from '../functions/fetchFromDB/tweets/searchTweets';
+import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
 
 export const dashboardRouter = Router();
 
@@ -37,20 +38,27 @@ dashboardRouter.get(dashboardRoutes.general, async (req: Request, res: Response)
 	res.status(200).send(dashboardObject);
 });
 
-dashboardRouter.get(dashboardRoutes.hashtagsAbundance, async (req: Request, res: Response) => {
-	const { timeRange, users } = req.query;
-	const userArray = users?.split(',');
-	const hashtagsAbundanceArray = await hashtagsAbundance(timeRange, userArray);
-	res.status(200).send(hashtagsAbundanceArray);
-});
+dashboardRouter.get(
+	dashboardRoutes.hashtagsAbundance,
+	async (req: Request, res: Response) => {
+		const { timeRange, users } = req.query;
+		const userArray = users?.split(',');
+		const hashtagsAbundanceArray = await hashtagsAbundance(timeRange, userArray);
+		res.status(200).send(hashtagsAbundanceArray);
+	},
+);
 
 dashboardRouter.get(
 	dashboardRoutes.mostInfluentialTweets,
 	async (req: Request, res: Response) => {
 		const { timeRange, sortBy, users } = req.query;
 		const userArray = users?.split(',');
-		const usernames = userArray || await getUsernames();
-		const influentialTweets = await mostInfluentialTweets(timeRange, sortBy, usernames);
+		const usernames = userArray || (await getUsernames());
+		const influentialTweets = await mostInfluentialTweets(
+			timeRange,
+			sortBy,
+			usernames,
+		);
 		const mediaKeys = influentialTweets
 			.filter(t => t.attachments)
 			.map(t => t.attachments.media_keys)
@@ -78,61 +86,72 @@ dashboardRouter.get(dashboardRoutes.tweetsTypes, async (req: Request, res: Respo
 	res.status(200).send(types);
 });
 
-dashboardRouter.get(dashboardRoutes.tweetsLanguages, async (req: Request, res: Response) => {
-	const { timeRange, users } = req.query;
-	const userArray = users?.split(',');
-	const languages = await tweetsLanguages(timeRange, userArray);
-	res.status(200).send(languages);
-})
+dashboardRouter.get(
+	dashboardRoutes.tweetsLanguages,
+	async (req: Request, res: Response) => {
+		const { timeRange, users } = req.query;
+		const userArray = users?.split(',');
+		const languages = await tweetsLanguages(timeRange, userArray);
+		res.status(200).send(languages);
+	},
+);
 
 dashboardRouter.get(dashboardRoutes.tweetsSource, async (req: Request, res: Response) => {
 	const { timeRange, users } = req.query;
 	const userArray = users?.split(',');
 	const source = await tweetsSource(timeRange, userArray);
 	res.status(200).send(source);
-})
+});
 
-dashboardRouter.get(dashboardRoutes.tweetsMonthly, async (req: Request, res: Response) => {
-	const { timeRange, users } = req.query;
-	const userArray = users?.split(',');
-	const monthly = await tweetsMonthly(timeRange, userArray);
-	res.status(200).send(monthly);
-})
+dashboardRouter.get(
+	dashboardRoutes.tweetsMonthly,
+	async (req: Request, res: Response) => {
+		const { timeRange, users } = req.query;
+		const userArray = users?.split(',');
+		const monthly = await tweetsMonthly(timeRange, userArray);
+		res.status(200).send(monthly);
+	},
+);
 
 dashboardRouter.get(dashboardRoutes.tweetsHourly, async (req: Request, res: Response) => {
 	const { timeRange, users } = req.query;
 	const userArray = users?.split(',');
 	const hourly = await tweetsHourly(timeRange, userArray);
 	res.status(200).send(hourly);
-})
+});
 
 dashboardRouter.get(dashboardRoutes.users, async (req: Request, res: Response) => {
 	const users = await usersList();
 	res.status(200).send(users);
-})
+});
 
 dashboardRouter.get(dashboardRoutes.searchTweets, async (req: Request, res: Response) => {
-	const { timeRange, users, search } = req.query;
+	const { timeRange, users, search, tweetTypes, sortBy, fromDate, toDate } = req.query;
 	const userArray = users?.split(',');
-	const results = await searchTweets(timeRange, userArray, search);
-	res.status(200).send(results);
-})
+	const tweetTypesArray = tweetTypes?.split(',');
+	const tweets = await searchTweets(timeRange, userArray, search, sortBy, fromDate, toDate, tweetTypesArray);
+	const mediaKeys = tweets
+		.filter(t => t.attachments)
+		.map(t => t.attachments.media_keys)
+		.flat();
+	const media = await getMedia(mediaKeys);
+	res.status(200).send({ tweets, media });
+});
 
 dashboardRouter.get(dashboardRoutes.user, async (req: Request, res: Response) => {
 	const { username } = req.params;
 	const user = await getUser(username);
 	if (user.pinned_tweet_id) {
 		const pinnedTweet = await getTweet(user.pinned_tweet_id);
-		const mediaKeys = pinnedTweet.attachments?.media_keys
+		const mediaKeys = pinnedTweet.attachments?.media_keys;
 		if (mediaKeys) {
 			const media = await getMedia(mediaKeys);
 			res.status(200).send({ user, pinnedTweet, media });
 		} else {
 			res.status(200).send({ user, pinnedTweet });
 		}
-	}
-	else res.status(200).send({ user });
-})
+	} else res.status(200).send({ user });
+});
 
 dashboardRouter.get(userRoutes.general, async (req: Request, res: Response) => {
 	const { username } = req.params;
@@ -148,4 +167,15 @@ dashboardRouter.get(userRoutes.general, async (req: Request, res: Response) => {
 		publicMetricsAverage: dashboardArray[2],
 	};
 	res.status(200).send(dashboardObject);
+});
+
+dashboardRouter.get(dashboardRoutes.wordsWar, async (req: Request, res: Response) => {
+	const { users, search, tweetTypes, fromDate, toDate } = req.query;
+	const userArray = users?.split(',');
+	const tweetTypesArray = tweetTypes?.split(',');
+	const searchArray = search?.split(',');
+	const promises = searchArray?.map(s => wordsWar(userArray, s, fromDate, toDate, tweetTypesArray));
+	const wordsWarArray = await Promise.all(promises);
+	const result = wordsWarArray.map((w, i) => ({ word: searchArray[i], wordsWar: w }));
+	res.status(200).send(result);
 })

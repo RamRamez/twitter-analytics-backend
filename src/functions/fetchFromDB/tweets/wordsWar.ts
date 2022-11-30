@@ -1,9 +1,16 @@
+import { TTweetTypes } from '../../../types/referencedTweetsType';
 import { matchCreator } from '../../../lib/helpers';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function tweetsMonthly(time, usernames) {
-	const $match = matchCreator(time, usernames);
+export default async function wordsWar(
+	usernames?: string[],
+	search?: string,
+	fromDate?: string,
+	toDate?: string,
+	tweetTypes?: TTweetTypes[],
+) {
+	const $match = matchCreator(undefined, usernames, search, fromDate, toDate, tweetTypes);
 	return Tweets.aggregate([
 		{ $match },
 		{

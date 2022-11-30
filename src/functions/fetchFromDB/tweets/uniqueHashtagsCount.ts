@@ -3,7 +3,10 @@ import { ETimeRange } from '../../../types/timeRange';
 
 const Tweets = require('../../../models/tweetModelV2');
 
-export default async function uniqueHashtagsCount(time: ETimeRange, usernames?: string[]) {
+export default async function uniqueHashtagsCount(
+	time: ETimeRange,
+	usernames?: string[],
+) {
 	const match = matchCreator(time, usernames);
 	match['entities.hashtags'] = { $exists: true, $ne: [] };
 	return Tweets.find(match)

@@ -26,10 +26,11 @@ export const dashboardRoutes = {
 	users: '/users',
 	searchTweets: '/searchTweets',
 	user: '/user/:username',
+	wordsWar: '/wordsWar',
 };
 
 export const userRoutes = {
 	general: `${dashboardRoutes.user}/generalStats`,
-}
+};
 
 export default routes;
