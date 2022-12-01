@@ -21,6 +21,7 @@ import publicMetricsAverage from '../functions/fetchFromDB/tweets/publicMetricsA
 import searchTweets from '../functions/fetchFromDB/tweets/searchTweets';
 import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
 import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
+import retweetAvgMonthly from '../functions/fetchFromDB/tweets/retweetAvgMonthly';
 
 export const dashboardRouter = Router();
 
@@ -187,4 +188,25 @@ dashboardRouter.get(dashboardRoutes.wordCloud, async (req: Request, res: Respons
 	const tweetTypesArray = tweetTypes?.split(',');
 	const cloud = await wordCloud(userArray, search, fromDate, toDate, tweetTypesArray);
 	res.status(200).send(cloud);
+})
+
+dashboardRouter.get(dashboardRoutes.wordsInfluence, async (req: Request, res: Response) => {
+	const { users, search, tweetTypes, fromDate, toDate } = req.query;
+	const userArray = users?.split(',');
+	const tweetTypesArray = tweetTypes?.split(',');
+	const searchArray = search?.split(',');
+	const promises = searchArray?.map(s => retweetAvgMonthly(userArray, s, fromDate, toDate, tweetTypesArray));
+	const wordsInfluenceArray = await Promise.all(promises);
+	const result = wordsInfluenceArray.map((w, i) => ({ word: searchArray[i], wordsInfluence: w }));
+	res.status(200).send(result);
+})
+
+dashboardRouter.get(dashboardRoutes.profilesInfluence, async (req: Request, res: Response) => {
+	const { users, search, tweetTypes, fromDate, toDate } = req.query;
+	const userArray = users?.split(',');
+	const tweetTypesArray = tweetTypes?.split(',');
+	const promises = userArray?.map(user => retweetAvgMonthly([user], search, fromDate, toDate, tweetTypesArray));
+	const profilesArray = await Promise.all(promises);
+	const result = profilesArray.map((p, i) => ({ profile: userArray[i], profilesInfluence: p }));
+	res.status(200).send(result);
 })

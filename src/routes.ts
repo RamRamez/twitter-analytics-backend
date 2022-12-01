@@ -28,6 +28,8 @@ export const dashboardRoutes = {
 	user: '/user/:username',
 	wordsWar: '/wordsWar',
 	wordCloud: '/wordCloud',
+	wordsInfluence: '/wordsInfluence',
+	profilesInfluence: '/profilesInfluence',
 };
 
 export const userRoutes = {
