@@ -2,9 +2,15 @@ import { ETimeRange } from '../types/timeRange';
 import { ESortByDate } from '../types/sortBy';
 import { EPublicMetrics } from '../types/publicMetrics';
 import { TTweetOnly, TTweetTypes } from '../types/referencedTweetsType';
+import { ITweet } from '../types/tweet';
+import { IUserSimple } from '../types/user';
+import { fetchUserByName } from '../functions/fetchFromTwitter/fetchUserByName';
+import { updateUser } from '../functions/saveToDB/updateUser';
+import { insertTweets } from '../functions/saveToDB/insertTweets';
+import { fetchUserTweetsById } from '../functions/fetchFromTwitter/fetchUserTweetsById';
 
-export function formatResponse(error: string) {
-	return { message: error };
+export function formatResponse(message: string) {
+	return { message };
 }
 
 export function dbTimeRange(time: ETimeRange) {
@@ -83,4 +89,28 @@ export function sortByCreator(sortBy?: ESortByDate | EPublicMetrics) {
 		sort.created_at = 1;
 	}
 	return sort;
+}
+
+export function addAuthorsToTweets(tweets: ITweet[], users: IUserSimple[]) {
+	return tweets.map((tweet) => {
+		const author = users.find((user) => user.id === tweet.author_id);
+		if (author) {
+			const { name, username, id, profile_image_url } = author;
+			tweet.author = { name, profile_image_url, username, id };
+		}
+		return tweet;
+	});
+}
+
+export const fetchFromTwitter = async (user: string, lastTweetId?: string) => {
+	const { data: userData, includes } = await fetchUserByName(user);
+	await updateUser(userData);
+	const includeTweets = addAuthorsToTweets(includes.tweets, [userData]);
+	await insertTweets(includeTweets);
+	const newLastTweetId = await fetchUserTweetsById(userData.id, lastTweetId);
+	if (!newLastTweetId) {
+		return `${user} has no new tweets`;
+	}
+	await updateUser({ id: userData.id, last_tweet_id: newLastTweetId });
+	return `${user} tweets ${lastTweetId ? 'updated' : 'added'}`;
 }

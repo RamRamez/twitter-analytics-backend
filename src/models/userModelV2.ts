@@ -44,6 +44,7 @@ const userModelV2 = new Schema({
 	entities: { type: entitiesModel, required: false },
 	location: { type: String, required: false },
 	pinned_tweet_id: { type: String, required: false },
+	last_tweet_id: { type: String, required: false },
 	profile_image_url: { type: String, required: false },
 	protected: { type: Boolean, required: false },
 	public_metrics: { type: publicMetricsModel, required: false },

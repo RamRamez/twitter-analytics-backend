@@ -92,7 +92,7 @@ const authorModel = new Schema({
 
 const tweetsModelV2 = new Schema({
 	attachments: { type: attachmentsModel, required: false },
-	author: { type: authorModel, required: false },
+	author: { type: authorModel, required: true },
 	context_annotations: { type: [contextAnnotationModel], required: false },
 	conversation_id: { type: String, required: false },
 	created_at: { type: Date, required: false },

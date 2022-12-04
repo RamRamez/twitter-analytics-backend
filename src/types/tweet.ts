@@ -85,6 +85,7 @@ interface ITweetAuthor {
 export interface ITweet {
 	attachments?: ITweetAttachments;
 	author: ITweetAuthor;
+	author_id?: string;
 	context_annotations: ITweetContextAnnotation[];
 	conversation_id: string;
 	created_at: string;
