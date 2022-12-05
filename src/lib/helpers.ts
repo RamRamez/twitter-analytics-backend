@@ -105,8 +105,10 @@ export function addAuthorsToTweets(tweets: ITweet[], users: IUserSimple[]) {
 export const fetchFromTwitter = async (user: string, lastTweetId?: string) => {
 	const { data: userData, includes } = await fetchUserByName(user);
 	await updateUser(userData);
-	const includeTweets = addAuthorsToTweets(includes.tweets, [userData]);
-	await insertTweets(includeTweets);
+	if (includes) {
+		const includeTweets = addAuthorsToTweets(includes.tweets, [userData]);
+		await insertTweets(includeTweets);
+	}
 	const newLastTweetId = await fetchUserTweetsById(userData.id, lastTweetId);
 	if (!newLastTweetId) {
 		return `${user} has no new tweets`;
