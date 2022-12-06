@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { catchQueries } from '../functions/saveToDB/saveQueries';
+import { catchQueries } from '../functions/saveToDB/insertQueries';
 import { formatResponse } from '../lib/helpers';
 const SystemUsers = require('../models/systemUsers');
 

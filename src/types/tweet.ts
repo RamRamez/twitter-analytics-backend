@@ -1,3 +1,6 @@
+import { IMedia } from './media';
+import { IUserSimple } from './user';
+
 export interface ITweetAnnotation {
 	start: number;
 	end: number;
@@ -75,16 +78,9 @@ interface ITweetReferencedTweet {
 	id: string;
 }
 
-interface ITweetAuthor {
-	id: string;
-	name: string;
-	username: string;
-	profile_image_url: string;
-}
-
 export interface ITweet {
 	attachments?: ITweetAttachments;
-	author: ITweetAuthor;
+	author: IUserSimple;
 	author_id?: string;
 	context_annotations: ITweetContextAnnotation[];
 	conversation_id: string;
@@ -99,4 +95,21 @@ export interface ITweet {
 	reply_settings: string;
 	source: string;
 	text: string;
+}
+
+export interface IRawTweet {
+	data: ITweet[];
+	includes?: {
+		users: IUserSimple[];
+		tweets: ITweet[];
+		media: IMedia[];
+	};
+	meta: {
+		newest_id: string;
+		oldest_id: string;
+		result_count: number;
+		next_token?: string;
+		previous_token?: string;
+	};
+	errors: any[];
 }

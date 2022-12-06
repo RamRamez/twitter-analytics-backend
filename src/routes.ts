@@ -11,6 +11,7 @@ const routes = {
 
 export const adminRoutes = {
 	addUser: '/addUser',
+	token: '/token',
 };
 
 export const dashboardRoutes = {

@@ -22,7 +22,7 @@ export function catchQueries(request) {
 	usersQueries.push(userActivity);
 }
 
-function saveQueries(queries) {
+function insertQueries(queries) {
 	if (queries.length !== 0) {
 		UserActivity.insertMany(queries).catch(console.log);
 	}
@@ -30,6 +30,6 @@ function saveQueries(queries) {
 
 // Save sessions to DB every interval
 setInterval(() => {
-	saveQueries(usersQueries);
+	insertQueries(usersQueries);
 	usersQueries = []; // Clear temp queries
 }, saveQueriesInterval);

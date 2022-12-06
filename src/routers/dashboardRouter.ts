@@ -22,7 +22,7 @@ import searchTweets from '../functions/fetchFromDB/tweets/searchTweets';
 import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
 import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
 import retweetAvgMonthly from '../functions/fetchFromDB/tweets/retweetAvgMonthly';
-import { fetchFromTwitter, formatResponse } from '../lib/helpers';
+import { fetchFromTwitter, formatResponse, handleLog } from '../lib/helpers';
 
 export const dashboardRouter = Router();
 
@@ -157,23 +157,33 @@ dashboardRouter.get(dashboardRoutes.user, async (req: Request, res: Response) =>
 });
 
 dashboardRouter.get(dashboardRoutes.updateUsers, async (req: Request, res: Response) => {
-	const { users } = req.query;
-	const { last_tweet_id: lastTweetId } = await getUser(users);
-	const message = await fetchFromTwitter(users, lastTweetId);
-	res.status(200).send(formatResponse(message));
+	try {
+		const { users } = req.query;
+		const { last_tweet_id: lastTweetId } = await getUser(users);
+		const message = await fetchFromTwitter(users, lastTweetId);
+		res.status(200).send(formatResponse(message));
+	} catch (error) {
+		!error.tag && handleLog(error, 'dashboardRoutes.updateUsers');
+		res.status(500).send(formatResponse('Error updating users'));
+	}
 })
 
 dashboardRouter.get(dashboardRoutes.addUsers, async (req: Request, res: Response) => {
-	const { users } = req.query;
-	const userArray = users?.split(',');
-	const dbUsers = await usersList();
-	const usernameList = dbUsers.map(u => u.username.toLowerCase());
-	const usersToAdd = userArray.filter(user => !usernameList.includes(user.toLowerCase()));
-	if (usersToAdd.length > 0) {
-		const message = await fetchFromTwitter(usersToAdd[0]);
-		return res.status(200).send(formatResponse(message));
+	try {
+		const { users } = req.query;
+		const userArray = users?.split(',');
+		const dbUsers = await usersList();
+		const usernameList = dbUsers.map(u => u.username.toLowerCase());
+		const usersToAdd = userArray.filter(user => !usernameList.includes(user.toLowerCase()));
+		if (usersToAdd.length > 0) {
+			const message = await fetchFromTwitter(usersToAdd[0]);
+			return res.status(200).send(formatResponse(message));
+		}
+		res.status(200).send(formatResponse('No new users to add'));
+	} catch (error) {
+		!error.tag && handleLog(error, 'dashboardRoutes.addUsers');
+		res.status(500).send(formatResponse('Error adding users'));
 	}
-	res.status(200).send(formatResponse('No new users to add'));
 })
 
 dashboardRouter.get(userRoutes.general, async (req: Request, res: Response) => {

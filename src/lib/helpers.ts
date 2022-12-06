@@ -9,6 +9,8 @@ import { updateUser } from '../functions/saveToDB/updateUser';
 import { insertTweets } from '../functions/saveToDB/insertTweets';
 import { fetchUserTweetsById } from '../functions/fetchFromTwitter/fetchUserTweetsById';
 
+const fs = require('fs');
+
 export function formatResponse(message: string) {
 	return { message };
 }
@@ -102,17 +104,36 @@ export function addAuthorsToTweets(tweets: ITweet[], users: IUserSimple[]) {
 	});
 }
 
-export const fetchFromTwitter = async (user: string, lastTweetId?: string) => {
-	const { data: userData, includes } = await fetchUserByName(user);
-	await updateUser(userData);
-	if (includes) {
-		const includeTweets = addAuthorsToTweets(includes.tweets, [userData]);
-		await insertTweets(includeTweets);
+export const fetchFromTwitter = async (user: string, lastTweetId?: string): Promise<string> => {
+	try {
+		const { data: userData, includes } = await fetchUserByName(user);
+		await updateUser(userData);
+		if (includes) {
+			const includeTweets = addAuthorsToTweets(includes.tweets, [userData]);
+			await insertTweets(includeTweets);
+		}
+		const newLastTweetId = await fetchUserTweetsById(userData.id, lastTweetId);
+		if (!newLastTweetId) {
+			handleLog(`${user} has no new tweets`)
+			return `${user} has no new tweets`;
+		}
+		await updateUser({ id: userData.id, last_tweet_id: newLastTweetId });
+		handleLog(`${user} tweets ${lastTweetId ? 'updated' : 'added'}`)
+		return `${user} tweets ${lastTweetId ? 'updated' : 'added'}`;
+	} catch (error) {
+		const tag = error.tag || 'fetchFromTwitter';
+		!error.tag && handleLog(error, tag);
+		throw { ...error, tag };
 	}
-	const newLastTweetId = await fetchUserTweetsById(userData.id, lastTweetId);
-	if (!newLastTweetId) {
-		return `${user} has no new tweets`;
-	}
-	await updateUser({ id: userData.id, last_tweet_id: newLastTweetId });
-	return `${user} tweets ${lastTweetId ? 'updated' : 'added'}`;
+}
+
+export const handleLog = (str: any, errorTag?: string) => {
+	errorTag && console.log({ error: str, errorCode: errorTag });
+	const oldData = fs.readFileSync(__dirname + '/../../log.txt');
+	const fd = fs.openSync(__dirname + '/../../log.txt', 'w+');
+	const log = `Date: ${new Date().toLocaleString()}\nLog: ${str} ${errorTag ? `\nError code: ${errorTag}` : ''}\n\n`;
+	const buffer = Buffer.from(log);
+	fs.writeSync(fd, buffer, 0, buffer.length, 0); //write new data
+	fs.writeSync(fd, oldData, 0, oldData.length, buffer.length); //append old data
+	fs.close(fd);
 }

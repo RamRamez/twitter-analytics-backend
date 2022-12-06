@@ -1,3 +1,5 @@
+import { ITweet } from './tweet';
+
 interface IUserEntityUrl {
 	start: number;
 	end: number;
@@ -51,7 +53,14 @@ export interface IUser {
 
 export interface IUserSimple {
 	id: string;
-	name: string;
-	username: string;
-	profile_image_url: string;
+	name?: string;
+	username?: string;
+	profile_image_url?: string;
+}
+
+export interface IRawUser {
+	data: IUser;
+	includes?: {
+		tweets: ITweet[]
+	};
 }
