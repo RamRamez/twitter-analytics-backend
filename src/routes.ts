@@ -33,6 +33,7 @@ export const dashboardRoutes = {
 	wordCloud: '/wordCloud',
 	wordsInfluence: '/wordsInfluence',
 	profilesInfluence: '/profilesInfluence',
+	logs: '/logs',
 };
 
 export const userRoutes = {

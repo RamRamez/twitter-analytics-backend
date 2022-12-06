@@ -23,6 +23,7 @@ import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
 import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
 import retweetAvgMonthly from '../functions/fetchFromDB/tweets/retweetAvgMonthly';
 import { fetchFromTwitter, formatResponse, handleLog } from '../lib/helpers';
+import { readFileSync } from 'fs';
 
 export const dashboardRouter = Router();
 
@@ -240,4 +241,14 @@ dashboardRouter.get(dashboardRoutes.profilesInfluence, async (req: Request, res:
 	const profilesArray = await Promise.all(promises);
 	const result = profilesArray.map((p, i) => ({ profile: userArray[i], profilesInfluence: p }));
 	res.status(200).send(result);
+})
+
+dashboardRouter.get(dashboardRoutes.logs, async (req: Request, res: Response) => {
+	try {
+		const logs = readFileSync(__dirname + '/../../log.txt', 'utf8');
+		res.status(200).send({ logs });
+	} catch (error) {
+		!error.tag && handleLog(error, 'dashboardRoutes.logs');
+		res.status(500).send(formatResponse('Error getting logs'));
+	}
 })
