@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { Request, Response, Router } from 'express';
 import { dashboardRoutes, userRoutes } from '../routes';
 import tweetCount from '../functions/fetchFromDB/tweets/tweetCount';
@@ -23,7 +24,6 @@ import wordsWar from '../functions/fetchFromDB/tweets/wordsWar';
 import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
 import retweetAvgMonthly from '../functions/fetchFromDB/tweets/retweetAvgMonthly';
 import { fetchFromTwitter, formatResponse, handleLog } from '../lib/helpers';
-import { readFileSync } from 'fs';
 
 export const dashboardRouter = Router();
 
@@ -133,7 +133,15 @@ dashboardRouter.get(dashboardRoutes.searchTweets, async (req: Request, res: Resp
 	const { timeRange, users, search, tweetTypes, sortBy, fromDate, toDate } = req.query;
 	const userArray = users?.split(',');
 	const tweetTypesArray = tweetTypes?.split(',');
-	const tweets = await searchTweets(timeRange, userArray, search, sortBy, fromDate, toDate, tweetTypesArray);
+	const tweets = await searchTweets(
+		timeRange,
+		userArray,
+		search,
+		sortBy,
+		fromDate,
+		toDate,
+		tweetTypesArray,
+	);
 	const mediaKeys = tweets
 		.filter(t => t.attachments)
 		.map(t => t.attachments.media_keys)
@@ -167,7 +175,7 @@ dashboardRouter.get(dashboardRoutes.updateUsers, async (req: Request, res: Respo
 		!error.tag && handleLog(error, 'dashboardRoutes.updateUsers');
 		res.status(500).send(formatResponse('Error updating users'));
 	}
-})
+});
 
 dashboardRouter.get(dashboardRoutes.addUsers, async (req: Request, res: Response) => {
 	try {
@@ -175,7 +183,9 @@ dashboardRouter.get(dashboardRoutes.addUsers, async (req: Request, res: Response
 		const userArray = users?.split(',');
 		const dbUsers = await usersList();
 		const usernameList = dbUsers.map(u => u.username.toLowerCase());
-		const usersToAdd = userArray.filter(user => !usernameList.includes(user.toLowerCase()));
+		const usersToAdd = userArray.filter(
+			user => !usernameList.includes(user.toLowerCase()),
+		);
 		if (usersToAdd.length > 0) {
 			const message = await fetchFromTwitter(usersToAdd[0]);
 			return res.status(200).send(formatResponse(message));
@@ -185,7 +195,7 @@ dashboardRouter.get(dashboardRoutes.addUsers, async (req: Request, res: Response
 		!error.tag && handleLog(error, 'dashboardRoutes.addUsers');
 		res.status(500).send(formatResponse('Error adding users'));
 	}
-})
+});
 
 dashboardRouter.get(userRoutes.general, async (req: Request, res: Response) => {
 	const { username } = req.params;
@@ -208,11 +218,13 @@ dashboardRouter.get(dashboardRoutes.wordsWar, async (req: Request, res: Response
 	const userArray = users?.split(',');
 	const tweetTypesArray = tweetTypes?.split(',');
 	const searchArray = search?.split(',');
-	const promises = searchArray?.map(s => wordsWar(userArray, s, fromDate, toDate, tweetTypesArray));
+	const promises = searchArray?.map(s =>
+		wordsWar(userArray, s, fromDate, toDate, tweetTypesArray),
+	);
 	const wordsWarArray = await Promise.all(promises);
 	const result = wordsWarArray.map((w, i) => ({ word: searchArray[i], wordsWar: w }));
 	res.status(200).send(result);
-})
+});
 
 dashboardRouter.get(dashboardRoutes.wordCloud, async (req: Request, res: Response) => {
 	const { users, search, tweetTypes, fromDate, toDate } = req.query;
@@ -220,28 +232,44 @@ dashboardRouter.get(dashboardRoutes.wordCloud, async (req: Request, res: Respons
 	const tweetTypesArray = tweetTypes?.split(',');
 	const cloud = await wordCloud(userArray, search, fromDate, toDate, tweetTypesArray);
 	res.status(200).send(cloud);
-})
+});
 
-dashboardRouter.get(dashboardRoutes.wordsInfluence, async (req: Request, res: Response) => {
-	const { users, search, tweetTypes, fromDate, toDate } = req.query;
-	const userArray = users?.split(',');
-	const tweetTypesArray = tweetTypes?.split(',');
-	const searchArray = search?.split(',');
-	const promises = searchArray?.map(s => retweetAvgMonthly(userArray, s, fromDate, toDate, tweetTypesArray));
-	const wordsInfluenceArray = await Promise.all(promises);
-	const result = wordsInfluenceArray.map((w, i) => ({ word: searchArray[i], wordsInfluence: w }));
-	res.status(200).send(result);
-})
+dashboardRouter.get(
+	dashboardRoutes.wordsInfluence,
+	async (req: Request, res: Response) => {
+		const { users, search, tweetTypes, fromDate, toDate } = req.query;
+		const userArray = users?.split(',');
+		const tweetTypesArray = tweetTypes?.split(',');
+		const searchArray = search?.split(',');
+		const promises = searchArray?.map(s =>
+			retweetAvgMonthly(userArray, s, fromDate, toDate, tweetTypesArray),
+		);
+		const wordsInfluenceArray = await Promise.all(promises);
+		const result = wordsInfluenceArray.map((w, i) => ({
+			word: searchArray[i],
+			wordsInfluence: w,
+		}));
+		res.status(200).send(result);
+	},
+);
 
-dashboardRouter.get(dashboardRoutes.profilesInfluence, async (req: Request, res: Response) => {
-	const { users, search, tweetTypes, fromDate, toDate } = req.query;
-	const userArray = users?.split(',');
-	const tweetTypesArray = tweetTypes?.split(',');
-	const promises = userArray?.map(user => retweetAvgMonthly([user], search, fromDate, toDate, tweetTypesArray));
-	const profilesArray = await Promise.all(promises);
-	const result = profilesArray.map((p, i) => ({ profile: userArray[i], profilesInfluence: p }));
-	res.status(200).send(result);
-})
+dashboardRouter.get(
+	dashboardRoutes.profilesInfluence,
+	async (req: Request, res: Response) => {
+		const { users, search, tweetTypes, fromDate, toDate } = req.query;
+		const userArray = users?.split(',');
+		const tweetTypesArray = tweetTypes?.split(',');
+		const promises = userArray?.map(user =>
+			retweetAvgMonthly([user], search, fromDate, toDate, tweetTypesArray),
+		);
+		const profilesArray = await Promise.all(promises);
+		const result = profilesArray.map((p, i) => ({
+			profile: userArray[i],
+			profilesInfluence: p,
+		}));
+		res.status(200).send(result);
+	},
+);
 
 dashboardRouter.get(dashboardRoutes.logs, async (req: Request, res: Response) => {
 	try {
@@ -251,4 +279,4 @@ dashboardRouter.get(dashboardRoutes.logs, async (req: Request, res: Response) =>
 		!error.tag && handleLog(error, 'dashboardRoutes.logs');
 		res.status(500).send(formatResponse('Error getting logs'));
 	}
-})
+});

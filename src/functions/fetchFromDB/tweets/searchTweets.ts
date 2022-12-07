@@ -19,5 +19,7 @@ export default async function searchTweets(
 ): Promise<ITweet[]> {
 	const match = matchCreator(time, usernames, search, fromDate, toDate, tweetTypes);
 	const sort = sortByCreator(sortBy);
-	return Tweets.find(match).sort(sort).limit(limit || 20);
+	return Tweets.find(match)
+		.sort(sort)
+		.limit(limit || 20);
 }

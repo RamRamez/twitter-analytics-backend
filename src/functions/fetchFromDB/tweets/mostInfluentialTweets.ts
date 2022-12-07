@@ -11,8 +11,19 @@ export default async function mostInfluentialTweets(
 	usernames,
 	limit = 10,
 ): Promise<ITweet[]> {
-	const tweetTypes = [EReferencedTweetsType.replied_to, EReferencedTweetsType.quoted, TTweetOnly.tweet];
-	const $match = matchCreator(time, usernames, undefined, undefined, undefined, tweetTypes);
+	const tweetTypes = [
+		EReferencedTweetsType.replied_to,
+		EReferencedTweetsType.quoted,
+		TTweetOnly.tweet,
+	];
+	const $match = matchCreator(
+		time,
+		usernames,
+		undefined,
+		undefined,
+		undefined,
+		tweetTypes,
+	);
 	const $sort = sortByCreator(type);
 	return Tweets.aggregate([{ $match }, { $sort }, { $limit: limit }]);
 }

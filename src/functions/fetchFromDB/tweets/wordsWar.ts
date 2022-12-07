@@ -10,7 +10,14 @@ export default async function wordsWar(
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
 ) {
-	const $match = matchCreator(undefined, usernames, search, fromDate, toDate, tweetTypes);
+	const $match = matchCreator(
+		undefined,
+		usernames,
+		search,
+		fromDate,
+		toDate,
+		tweetTypes,
+	);
 	return Tweets.aggregate([
 		{ $match },
 		{

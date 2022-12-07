@@ -8,6 +8,6 @@ export default async function getToken(): Promise<IToken> {
 		return Token.findOne();
 	} catch (error) {
 		handleLog(error, 'getToken');
-		throw { ...error, tag: 'getToken' }
+		throw { ...error, tag: 'getToken' };
 	}
 }

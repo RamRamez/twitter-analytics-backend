@@ -61,6 +61,6 @@ export interface IUserSimple {
 export interface IRawUser {
 	data: IUser;
 	includes?: {
-		tweets: ITweet[]
+		tweets: ITweet[];
 	};
 }

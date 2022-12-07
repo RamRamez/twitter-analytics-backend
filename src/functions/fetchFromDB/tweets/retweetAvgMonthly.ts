@@ -10,7 +10,14 @@ export default async function retweetAvgMonthly(
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
 ) {
-	const $match = matchCreator(undefined, usernames, search, fromDate, toDate, tweetTypes);
+	const $match = matchCreator(
+		undefined,
+		usernames,
+		search,
+		fromDate,
+		toDate,
+		tweetTypes,
+	);
 	return Tweets.aggregate([
 		{ $match },
 		{
@@ -24,7 +31,7 @@ export default async function retweetAvgMonthly(
 		{
 			$group: {
 				_id: { month: '$month', year: '$year' },
-				retweetAverage: { $avg: "$retweetCount" },
+				retweetAverage: { $avg: '$retweetCount' },
 			},
 		},
 		{ $sort: { '_id.year': 1, '_id.month': 1 } },

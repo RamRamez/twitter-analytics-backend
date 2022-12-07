@@ -8,7 +8,7 @@ export default async function publicMetricsAverage(
 	usernames?: string[],
 ) {
 	const $match = matchCreator(time, usernames);
-	$match['public_metrics'] = { $exists: true };
+	$match.public_metrics = { $exists: true };
 	return Tweets.aggregate([
 		{ $match },
 		{

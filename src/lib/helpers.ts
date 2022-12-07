@@ -16,7 +16,7 @@ export function formatResponse(message: string) {
 }
 
 export function dbTimeRange(time: ETimeRange) {
-	let d = new Date();
+	const d = new Date();
 	if (time === 'week') {
 		d.setDate(d.getDate() - 7);
 	} else if (time === 'month') {
@@ -55,26 +55,26 @@ export function matchCreator(
 		if (!match.created_at) {
 			match.created_at = {};
 		}
-		match.created_at['$gte'] = new Date(fromDate);
+		match.created_at.$gte = new Date(fromDate);
 	}
 	if (toDate) {
 		if (!match.created_at) {
 			match.created_at = {};
 		}
-		match.created_at['$lte'] = new Date(toDate);
+		match.created_at.$lte = new Date(toDate);
 	}
 	if (tweetTypes?.length > 0) {
 		if (tweetTypes.length === 1) {
 			if (tweetTypes.includes(TTweetOnly.tweet)) {
-				match['referenced_tweets'] = { $size: 0 };
+				match.referenced_tweets = { $size: 0 };
 			} else {
 				match['referenced_tweets.type'] = tweetTypes[0];
 			}
 		} else {
-			match['$or'] = [];
-			match['$or'].push({ 'referenced_tweets.type': { $in: tweetTypes } });
+			match.$or = [];
+			match.$or.push({ 'referenced_tweets.type': { $in: tweetTypes } });
 			if (tweetTypes.includes(TTweetOnly.tweet)) {
-				match['$or'].push({ referenced_tweets: { $size: 0 } });
+				match.$or.push({ referenced_tweets: { $size: 0 } });
 			}
 		}
 	}
@@ -94,8 +94,8 @@ export function sortByCreator(sortBy?: ESortByDate | EPublicMetrics) {
 }
 
 export function addAuthorsToTweets(tweets: ITweet[], users: IUserSimple[]) {
-	return tweets.map((tweet) => {
-		const author = users.find((user) => user.id === tweet.author_id);
+	return tweets.map(tweet => {
+		const author = users.find(user => user.id === tweet.author_id);
 		if (author) {
 			const { name, username, id, profile_image_url } = author;
 			tweet.author = { name, profile_image_url, username, id };
@@ -104,7 +104,10 @@ export function addAuthorsToTweets(tweets: ITweet[], users: IUserSimple[]) {
 	});
 }
 
-export const fetchFromTwitter = async (user: string, lastTweetId?: string): Promise<string> => {
+export const fetchFromTwitter = async (
+	user: string,
+	lastTweetId?: string,
+): Promise<string> => {
 	try {
 		const { data: userData, includes } = await fetchUserByName(user);
 		await updateUser(userData);
@@ -114,26 +117,28 @@ export const fetchFromTwitter = async (user: string, lastTweetId?: string): Prom
 		}
 		const newLastTweetId = await fetchUserTweetsById(userData.id, lastTweetId);
 		if (!newLastTweetId) {
-			handleLog(`${user} has no new tweets`)
+			handleLog(`${user} has no new tweets`);
 			return `${user} has no new tweets`;
 		}
 		await updateUser({ id: userData.id, last_tweet_id: newLastTweetId });
-		handleLog(`${user} tweets ${lastTweetId ? 'updated' : 'added'}`)
+		handleLog(`${user} tweets ${lastTweetId ? 'updated' : 'added'}`);
 		return `${user} tweets ${lastTweetId ? 'updated' : 'added'}`;
 	} catch (error) {
 		const tag = error.tag || 'fetchFromTwitter';
 		!error.tag && handleLog(error, tag);
 		throw { ...error, tag };
 	}
-}
+};
 
 export const handleLog = (str: any, errorTag?: string) => {
 	errorTag && console.log({ error: str, errorCode: errorTag });
 	const oldData = fs.readFileSync(__dirname + '/../../log.txt');
 	const fd = fs.openSync(__dirname + '/../../log.txt', 'w+');
-	const log = `Date: ${new Date().toLocaleString()}\nLog: ${str} ${errorTag ? `\nError code: ${errorTag}` : ''}\n\n`;
+	const log = `Date: ${new Date().toLocaleString()}\nLog: ${str} ${
+		errorTag ? `\nError code: ${errorTag}` : ''
+	}\n\n`;
 	const buffer = Buffer.from(log);
 	fs.writeSync(fd, buffer, 0, buffer.length, 0); //write new data
 	fs.writeSync(fd, oldData, 0, oldData.length, buffer.length); //append old data
 	fs.close(fd);
-}
+};
