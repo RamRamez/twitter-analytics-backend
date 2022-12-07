@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { adminRoutes } from '../routes';
 import { formatResponse, handleLog } from '../lib/helpers';
 import insertToken from '../functions/saveToDB/insertToken';
-import getToken from '../functions/saveToDB/getToken';
+import getToken from '../functions/fetchFromDB/getToken';
 const SystemUsers = require('../models/systemUsers');
 
 export const adminRouter = Router();

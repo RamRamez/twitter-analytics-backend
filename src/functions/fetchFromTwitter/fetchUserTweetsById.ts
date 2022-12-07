@@ -1,7 +1,7 @@
 import { insertMedia } from '../saveToDB/insertMedia';
 import { addAuthorsToTweets, handleLog } from '../../lib/helpers';
 import { insertTweets } from '../saveToDB/insertTweets';
-import getToken from '../saveToDB/getToken';
+import getToken from '../fetchFromDB/getToken';
 import { IRawTweet } from '../../types/tweet';
 
 const axios = require("axios");

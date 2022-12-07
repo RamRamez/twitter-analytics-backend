@@ -1,4 +1,4 @@
-import getToken from '../saveToDB/getToken';
+import getToken from '../fetchFromDB/getToken';
 import { handleLog } from '../../lib/helpers';
 import { IRawUser } from '../../types/user';
 
