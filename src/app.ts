@@ -1,16 +1,18 @@
-import { rootRouter } from './routers/rootRouter.index';
+import express from 'express';
+import bodyParser from 'body-parser';
+import MongoStore from 'connect-mongo';
+import cors from 'cors';
+import session from 'express-session';
+import { config } from 'dotenv';
+import { v4 as uuidv4 } from 'uuid';
 import routes from './routes';
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const { v4: uuidv4 } = require('uuid');
+import rootRouter from './routers/rootRouter.index';
+
+config();
 
 const { DB_URI, BACKEND_PORT, FRONTEND_URL, SESSION_SECRET } = process.env;
 
-export async function App() {
+export default async function App() {
 	const app = express();
 	app.use(
 		cors({

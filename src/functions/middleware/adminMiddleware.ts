@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { EUserRole } from '../../types/userRole';
+import EUserRole from '../../types/userRole';
 import { formatResponse } from '../../lib/helpers';
 
 function adminMiddleware(req: Request, res: Response, next: NextFunction) {

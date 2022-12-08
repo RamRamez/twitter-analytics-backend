@@ -1,8 +1,7 @@
 import { IMedia } from '../../types/media';
+import Media from '../../models/mediaModelV2';
 
-const Media = require('../../models/mediaModelV2');
-
-export async function insertMedia(media: IMedia[]) {
+export default async function insertMedia(media: IMedia[]) {
 	try {
 		await Media.insertMany(media, { ordered: false });
 	} catch {

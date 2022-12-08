@@ -8,6 +8,6 @@ const systemUsers = new Schema({
 	expiration: { type: Date, required: false },
 });
 
-const userSchema = model('systemUsers', systemUsers, 'systemUsers');
+const SystemUsers = model('systemUsers', systemUsers, 'systemUsers');
 
-module.exports = userSchema;
+export default SystemUsers;

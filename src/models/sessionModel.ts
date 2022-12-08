@@ -6,6 +6,6 @@ const sessionModel = new Schema({
 	expires: { type: Date, required: true },
 });
 
-const sessionSchema = model('sessionModel', sessionModel, 'sessions');
+const Session = model('sessionModel', sessionModel, 'sessions');
 
-module.exports = sessionSchema;
+export default Session;

@@ -1,13 +1,13 @@
 import { handleLog } from '../../lib/helpers';
 import { IToken } from '../../types/token';
-
-const Token = require('../../models/tokenModel');
+import Token from '../../models/tokenModel';
+import ErrorTag from '../../lib/ErrorTag';
 
 export default async function getToken(): Promise<IToken> {
 	try {
 		return Token.findOne();
 	} catch (error) {
 		handleLog(error, 'getToken');
-		throw { ...error, tag: 'getToken' };
+		throw new ErrorTag(error, 'getToken');
 	}
 }

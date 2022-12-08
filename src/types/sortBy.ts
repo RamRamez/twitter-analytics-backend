@@ -1,4 +1,6 @@
-export enum ESortByDate {
+enum ESortByDate {
 	newest = 'newest',
 	oldest = 'oldest',
 }
+
+export default ESortByDate;

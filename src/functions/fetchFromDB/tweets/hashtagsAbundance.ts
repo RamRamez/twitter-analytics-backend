@@ -1,6 +1,5 @@
 import { matchCreator } from '../../../lib/helpers';
-
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
 
 export default async function hashtagsAbundance(time, users, limit = 10) {
 	const $match = matchCreator(time, users);

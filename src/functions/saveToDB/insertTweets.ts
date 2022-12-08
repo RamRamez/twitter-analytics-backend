@@ -1,8 +1,7 @@
 import { ITweet } from '../../types/tweet';
+import Tweets from '../../models/tweetModelV2';
 
-const Tweets = require('../../models/tweetModelV2');
-
-export async function insertTweets(tweets: ITweet[]) {
+export default async function insertTweets(tweets: ITweet[]) {
 	try {
 		await Tweets.insertMany(tweets, { ordered: false });
 	} catch {

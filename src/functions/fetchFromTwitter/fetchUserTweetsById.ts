@@ -1,10 +1,10 @@
-import { insertMedia } from '../saveToDB/insertMedia';
+import axios from 'axios';
 import { addAuthorsToTweets, handleLog } from '../../lib/helpers';
-import { insertTweets } from '../saveToDB/insertTweets';
 import getToken from '../fetchFromDB/getToken';
 import { IRawTweet } from '../../types/tweet';
-
-const axios = require('axios');
+import insertMedia from '../saveToDB/insertMedia';
+import insertTweets from '../saveToDB/insertTweets';
+import ErrorTag from '../../lib/ErrorTag';
 
 const expansions =
 	'&expansions=attachments.media_keys,author_id,edit_history_tweet_ids,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id';
@@ -25,10 +25,7 @@ const reqConfig = {
 	},
 };
 
-export const fetchUserTweetsById = async (
-	userId: string,
-	sinceId?: string,
-): Promise<string> => {
+const fetchUserTweetsById = async (userId: string, sinceId?: string): Promise<string> => {
 	try {
 		const { token } = (await getToken()) || {};
 		reqConfig.headers.authorization = 'Bearer ' + token;
@@ -46,8 +43,8 @@ export const fetchUserTweetsById = async (
 		return lastTweetId;
 	} catch (error) {
 		const tag = error.tag || 'fetchUserTweetsById';
-		!error.tag && handleLog(error, tag);
-		throw { ...error, tag };
+		handleLog(error, tag);
+		throw new ErrorTag(error, tag);
 	}
 };
 
@@ -83,7 +80,9 @@ const fetchTweets = async (
 		return lastTweetId;
 	} catch (error) {
 		const tag = error.tag || 'fetchTweets';
-		!error.tag && handleLog(error, tag);
-		throw { ...error, tag };
+		handleLog(error, tag);
+		throw new ErrorTag(error, tag);
 	}
 };
+
+export default fetchUserTweetsById;

@@ -10,6 +10,6 @@ const userActivity = new Schema({
 	ip: { type: String, required: true },
 });
 
-const twSchema = model('userActivity', userActivity, 'userActivity');
+const UserActivity = model('userActivity', userActivity, 'userActivity');
 
-module.exports = twSchema;
+export default UserActivity;

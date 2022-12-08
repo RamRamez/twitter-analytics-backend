@@ -1,7 +1,6 @@
 import countTweetOnly from './countTweetOnly';
 import { matchCreator } from '../../../lib/helpers';
-
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
 
 export default async function tweetsTypes(time, usernames) {
 	const $match = matchCreator(time, usernames);

@@ -1,6 +1,4 @@
 import { model, Schema } from 'mongoose';
-// const mongoose = require('mongoose');
-// const { Schema, model } = mongoose;
 
 const imageModel = new Schema({
 	url: { type: String, required: true },
@@ -108,6 +106,6 @@ const tweetsModelV2 = new Schema({
 	text: { type: String, required: false },
 });
 
-const tweetsV2 = model('tweetsModelV2', tweetsModelV2, 'tweets');
+const Tweets = model('tweetsModelV2', tweetsModelV2, 'tweets');
 
-module.exports = tweetsV2;
+export default Tweets;

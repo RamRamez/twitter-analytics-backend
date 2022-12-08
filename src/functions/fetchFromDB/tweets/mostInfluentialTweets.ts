@@ -1,9 +1,8 @@
-import { EPublicMetrics } from '../../../types/publicMetrics';
 import { EReferencedTweetsType, TTweetOnly } from '../../../types/referencedTweetsType';
 import { ITweet } from '../../../types/tweet';
 import { matchCreator, sortByCreator } from '../../../lib/helpers';
-
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
+import EPublicMetrics from '../../../types/publicMetrics';
 
 export default async function mostInfluentialTweets(
 	time,

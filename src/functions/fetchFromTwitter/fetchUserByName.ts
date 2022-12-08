@@ -1,8 +1,8 @@
+import axios from 'axios';
 import getToken from '../fetchFromDB/getToken';
 import { handleLog } from '../../lib/helpers';
 import { IRawUser } from '../../types/user';
-
-const axios = require('axios');
+import ErrorTag from '../../lib/ErrorTag';
 
 const expansions = '&expansions=pinned_tweet_id';
 const userFields =
@@ -18,7 +18,7 @@ const reqConfig = {
 	},
 };
 
-export const fetchUserByName = async (username: string): Promise<IRawUser> => {
+const fetchUserByName = async (username: string): Promise<IRawUser> => {
 	try {
 		const { token } = (await getToken()) || {};
 		reqConfig.headers.authorization = 'Bearer ' + token;
@@ -27,7 +27,9 @@ export const fetchUserByName = async (username: string): Promise<IRawUser> => {
 		return data;
 	} catch (error) {
 		const tag = error.tag || 'fetchUserByName';
-		!error.tag && handleLog(error, tag);
-		throw { ...error, tag };
+		handleLog(error, tag);
+		throw new ErrorTag(error, tag);
 	}
 };
+
+export default fetchUserByName;

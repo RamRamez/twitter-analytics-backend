@@ -1,11 +1,11 @@
-const parseurl = require('parseurl');
-const UserActivity = require('../../models/userActivity');
+import parseurl from 'parseurl';
+import UserActivity from '../../models/userActivity';
 
 let usersQueries = [];
-const saveQueriesInterval = 1000 * 60; // 1 hour
+const saveQueriesInterval = 1000 * 60; // 1 min
 
 // Catch user queries in temp var for future saving
-export function catchQueries(request) {
+export default function catchQueries(request) {
 	const { body, session, headers, connection } = request;
 	const url = parseurl(request);
 	const query = decodeURI(url.search ? url.pathname + url.search : url.pathname);

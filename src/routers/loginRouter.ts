@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { catchQueries } from '../functions/saveToDB/insertQueries';
 import { formatResponse } from '../lib/helpers';
-const SystemUsers = require('../models/systemUsers');
+import SystemUsers from '../models/systemUsers';
+import catchQueries from '../functions/saveToDB/insertQueries';
 
-export const loginRouter = Router();
+const loginRouter = Router();
 
 loginRouter.post('/', async (req, res) => {
 	const { username, password } = req.body;
@@ -33,3 +33,5 @@ loginRouter.post('/', async (req, res) => {
 		}
 	}
 });
+
+export default loginRouter;

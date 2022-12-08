@@ -3,9 +3,9 @@ import { adminRoutes } from '../routes';
 import { formatResponse, handleLog } from '../lib/helpers';
 import insertToken from '../functions/saveToDB/insertToken';
 import getToken from '../functions/fetchFromDB/getToken';
-const SystemUsers = require('../models/systemUsers');
+import SystemUsers from '../models/systemUsers';
 
-export const adminRouter = Router();
+const adminRouter = Router();
 
 adminRouter.post(adminRoutes.addUser, async (req: Request, res: Response) => {
 	const user = req.body;
@@ -29,7 +29,7 @@ adminRouter.get(adminRoutes.token, async (req: Request, res: Response) => {
 		const token = await getToken();
 		res.send(token || formatResponse('No token found'));
 	} catch (error) {
-		!error.tag && handleLog(error, 'adminRoutes.token.get');
+		handleLog(error, 'adminRoutes.token.get');
 		res.status(500).send(formatResponse('Error getting token!'));
 	}
 });
@@ -44,7 +44,9 @@ adminRouter.post(adminRoutes.token, async (req: Request, res: Response) => {
 			res.status(401).send(formatResponse('Token is required'));
 		}
 	} catch (error) {
-		!error.tag && handleLog(error, 'adminRoutes.token.post');
+		handleLog(error, 'adminRoutes.token.post');
 		res.status(500).send(formatResponse('Error adding token!'));
 	}
 });
+
+export default adminRouter;

@@ -4,6 +4,6 @@ const tokenModel = new Schema({
 	token: { type: String, required: true },
 });
 
-const tokenSchema = model('tokenModel', tokenModel, 'token');
+const Token = model('tokenModel', tokenModel, 'token');
 
-module.exports = tokenSchema;
+export default Token;

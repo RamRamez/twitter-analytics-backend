@@ -1,5 +1,5 @@
-import { catchQueries } from '../saveToDB/insertQueries';
 import { formatResponse } from '../../lib/helpers';
+import catchQueries from '../saveToDB/insertQueries';
 
 function middleware(req, res, next) {
 	const { user } = req.session;

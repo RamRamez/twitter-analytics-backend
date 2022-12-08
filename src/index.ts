@@ -1,17 +1,27 @@
-import { App } from './app';
-require('dotenv').config();
-const fs = require('fs');
-const mongoose = require('mongoose');
+import { existsSync, writeFileSync } from 'fs';
+import path from 'path';
+import { config } from 'dotenv';
+import { connect } from 'mongoose';
+import App from './app';
+import { handleLog } from './lib/helpers';
+
+global.logFile = path.join(__dirname, '/../log.txt');
+
+config();
 
 const { DB_URI } = process.env;
 
 main().catch(console.log);
 
 async function main() {
-	await mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-	const logExists = fs.existsSync(__dirname + '/../log.txt');
-	if (!logExists) {
-		fs.writeFileSync(__dirname + '/../log.txt', '');
+	try {
+		await connect(DB_URI);
+		const logExists = existsSync(global.logFile);
+		if (!logExists) {
+			writeFileSync(global.logFile, '');
+		}
+		await App();
+	} catch (error) {
+		handleLog(error, 'main');
 	}
-	await App();
 }

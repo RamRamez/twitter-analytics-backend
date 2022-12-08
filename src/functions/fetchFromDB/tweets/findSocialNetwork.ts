@@ -1,4 +1,4 @@
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
 
 export default async function findSocialNetwork(tweetIds: string[], limit = 10) {
 	return Tweets.aggregate([

@@ -1,7 +1,6 @@
 import { TTweetTypes } from '../../../types/referencedTweetsType';
 import { matchCreator } from '../../../lib/helpers';
-
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
 
 export default async function wordsWar(
 	usernames?: string[],

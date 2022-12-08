@@ -1,11 +1,10 @@
-import { ETimeRange } from '../../../types/timeRange';
+import ETimeRange from '../../../types/timeRange';
 import { matchCreator, sortByCreator } from '../../../lib/helpers';
-import { ESortByDate } from '../../../types/sortBy';
-import { EPublicMetrics } from '../../../types/publicMetrics';
 import { TTweetTypes } from '../../../types/referencedTweetsType';
+import Tweets from '../../../models/tweetModelV2';
 import { ITweet } from '../../../types/tweet';
-
-const Tweets = require('../../../models/tweetModelV2');
+import EPublicMetrics from '../../../types/publicMetrics';
+import ESortByDate from '../../../types/sortBy';
 
 export default async function searchTweets(
 	time: ETimeRange,
@@ -21,5 +20,5 @@ export default async function searchTweets(
 	const sort = sortByCreator(sortBy);
 	return Tweets.find(match)
 		.sort(sort)
-		.limit(limit || 20);
+		.limit(limit || 20) as unknown as ITweet[];
 }

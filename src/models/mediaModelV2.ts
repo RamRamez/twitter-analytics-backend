@@ -23,6 +23,6 @@ const mediaModelV2 = new Schema({
 	public_metrics: { type: publicMetricsModel, required: false },
 });
 
-const mediaV2 = model('mediaModelV2', mediaModelV2, 'media');
+const Media = model('mediaModelV2', mediaModelV2, 'media');
 
-module.exports = mediaV2;
+export default Media;

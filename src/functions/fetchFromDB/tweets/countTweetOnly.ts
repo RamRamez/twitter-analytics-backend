@@ -1,6 +1,5 @@
 import { dbTimeRange } from '../../../lib/helpers';
-
-const Tweets = require('../../../models/tweetModelV2');
+import Tweets from '../../../models/tweetModelV2';
 
 export default async function countTweetOnly(time) {
 	const created_at = dbTimeRange(time);

@@ -25,7 +25,7 @@ import wordCloud from '../functions/fetchFromDB/tweets/wordCloud';
 import retweetAvgMonthly from '../functions/fetchFromDB/tweets/retweetAvgMonthly';
 import { fetchFromTwitter, formatResponse, handleLog } from '../lib/helpers';
 
-export const dashboardRouter = Router();
+const dashboardRouter = Router();
 
 dashboardRouter.get(dashboardRoutes.general, async (req: Request, res: Response) => {
 	const { timeRange } = req.query;
@@ -172,7 +172,7 @@ dashboardRouter.get(dashboardRoutes.updateUsers, async (req: Request, res: Respo
 		const message = await fetchFromTwitter(users, lastTweetId);
 		res.status(200).send(formatResponse(message));
 	} catch (error) {
-		!error.tag && handleLog(error, 'dashboardRoutes.updateUsers');
+		handleLog(error, 'dashboardRoutes.updateUsers');
 		res.status(500).send(formatResponse('Error updating users'));
 	}
 });
@@ -192,7 +192,7 @@ dashboardRouter.get(dashboardRoutes.addUsers, async (req: Request, res: Response
 		}
 		res.status(200).send(formatResponse('No new users to add'));
 	} catch (error) {
-		!error.tag && handleLog(error, 'dashboardRoutes.addUsers');
+		handleLog(error, 'dashboardRoutes.addUsers');
 		res.status(500).send(formatResponse('Error adding users'));
 	}
 });
@@ -273,10 +273,12 @@ dashboardRouter.get(
 
 dashboardRouter.get(dashboardRoutes.logs, async (req: Request, res: Response) => {
 	try {
-		const logs = readFileSync(__dirname + '/../../log.txt', 'utf8');
+		const logs = readFileSync(global.logFile, 'utf8');
 		res.status(200).send({ logs });
 	} catch (error) {
-		!error.tag && handleLog(error, 'dashboardRoutes.logs');
+		handleLog(error, 'dashboardRoutes.logs');
 		res.status(500).send(formatResponse('Error getting logs'));
 	}
 });
+
+export default dashboardRouter;

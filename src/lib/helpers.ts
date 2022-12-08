@@ -1,15 +1,15 @@
-import { ETimeRange } from '../types/timeRange';
-import { ESortByDate } from '../types/sortBy';
-import { EPublicMetrics } from '../types/publicMetrics';
+import { readFileSync, openSync, writeSync, close } from 'fs';
+import ETimeRange from '../types/timeRange';
 import { TTweetOnly, TTweetTypes } from '../types/referencedTweetsType';
 import { ITweet } from '../types/tweet';
 import { IUserSimple } from '../types/user';
-import { fetchUserByName } from '../functions/fetchFromTwitter/fetchUserByName';
-import { updateUser } from '../functions/saveToDB/updateUser';
-import { insertTweets } from '../functions/saveToDB/insertTweets';
-import { fetchUserTweetsById } from '../functions/fetchFromTwitter/fetchUserTweetsById';
-
-const fs = require('fs');
+import fetchUserByName from '../functions/fetchFromTwitter/fetchUserByName';
+import fetchUserTweetsById from '../functions/fetchFromTwitter/fetchUserTweetsById';
+import insertTweets from '../functions/saveToDB/insertTweets';
+import ESortByDate from '../types/sortBy';
+import EPublicMetrics from '../types/publicMetrics';
+import updateUser from '../functions/saveToDB/updateUser';
+import ErrorTag from './ErrorTag';
 
 export function formatResponse(message: string) {
 	return { message };
@@ -125,20 +125,23 @@ export const fetchFromTwitter = async (
 		return `${user} tweets ${lastTweetId ? 'updated' : 'added'}`;
 	} catch (error) {
 		const tag = error.tag || 'fetchFromTwitter';
-		!error.tag && handleLog(error, tag);
-		throw { ...error, tag };
+		handleLog(error, tag);
+		throw new ErrorTag(error, tag);
 	}
 };
 
-export const handleLog = (str: any, errorTag?: string) => {
+export const handleLog = (str: ErrorTag | string, errorTag?: string) => {
+	if (typeof str !== 'string' && str.tag) {
+		return;
+	}
 	errorTag && console.log({ error: str, errorCode: errorTag });
-	const oldData = fs.readFileSync(__dirname + '/../../log.txt');
-	const fd = fs.openSync(__dirname + '/../../log.txt', 'w+');
+	const oldData = readFileSync(global.logFile);
+	const fd = openSync(global.logFile, 'w+');
 	const log = `Date: ${new Date().toLocaleString()}\nLog: ${str} ${
 		errorTag ? `\nError code: ${errorTag}` : ''
 	}\n\n`;
 	const buffer = Buffer.from(log);
-	fs.writeSync(fd, buffer, 0, buffer.length, 0); //write new data
-	fs.writeSync(fd, oldData, 0, oldData.length, buffer.length); //append old data
-	fs.close(fd);
+	writeSync(fd, buffer, 0, buffer.length, 0); //write new data
+	writeSync(fd, oldData, 0, oldData.length, buffer.length); //append old data
+	close(fd);
 };

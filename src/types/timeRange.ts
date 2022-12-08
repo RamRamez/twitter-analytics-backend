@@ -1,4 +1,4 @@
-export enum ETimeRange {
+enum ETimeRange {
 	week = 'week',
 	month = 'month',
 	threeMonth = '3month',
@@ -6,3 +6,5 @@ export enum ETimeRange {
 	year = 'year',
 	all = 'all',
 }
+
+export default ETimeRange;

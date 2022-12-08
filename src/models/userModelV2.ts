@@ -53,6 +53,6 @@ const userModelV2 = new Schema({
 	withheld: { type: Object, required: false },
 });
 
-const userV2 = model('userModelV2', userModelV2, 'users');
+const Users = model('userModelV2', userModelV2, 'users');
 
-module.exports = userV2;
+export default Users;
