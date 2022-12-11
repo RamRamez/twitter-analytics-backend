@@ -1,6 +1,7 @@
 import { TTweetTypes } from '../../../types/referencedTweetsType';
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import { ICountMonthly } from '../../../types/api';
 
 export default async function wordsWar(
 	usernames?: string[],
@@ -8,7 +9,7 @@ export default async function wordsWar(
 	fromDate?: string,
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
-) {
+): Promise<ICountMonthly[]> {
 	const $match = matchCreator(
 		undefined,
 		usernames,

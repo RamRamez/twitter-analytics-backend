@@ -6,10 +6,11 @@ import { IUserSimple } from '../types/user';
 import fetchUserByName from '../functions/fetchFromTwitter/fetchUserByName';
 import fetchUserTweetsById from '../functions/fetchFromTwitter/fetchUserTweetsById';
 import insertTweets from '../functions/saveToDB/insertTweets';
-import ESortByDate from '../types/sortBy';
+import { ESortByDate, ISortBy } from '../types/sortBy';
 import EPublicMetrics from '../types/publicMetrics';
 import updateUser from '../functions/saveToDB/updateUser';
 import ErrorTag from './ErrorTag';
+import { IMatch } from '../types/match';
 
 export function formatResponse(message: string) {
 	return { message };
@@ -40,8 +41,8 @@ export function matchCreator(
 	fromDate?: string,
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
-) {
-	const match: any = {};
+): IMatch {
+	const match: IMatch = {};
 	if (time && time !== ETimeRange.all) {
 		match.created_at = dbTimeRange(time);
 	}
@@ -81,8 +82,8 @@ export function matchCreator(
 	return match;
 }
 
-export function sortByCreator(sortBy?: ESortByDate | EPublicMetrics) {
-	const sort: any = {};
+export function sortByCreator(sortBy?: ESortByDate | EPublicMetrics): ISortBy {
+	const sort: ISortBy = {};
 	if (Object.values(EPublicMetrics).includes(sortBy as EPublicMetrics)) {
 		sort[`public_metrics.${sortBy}`] = -1;
 	} else if (sortBy === ESortByDate.newest) {

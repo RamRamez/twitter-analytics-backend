@@ -4,7 +4,7 @@ import { TTweetTypes } from '../../../types/referencedTweetsType';
 import Tweets from '../../../models/tweetModelV2';
 import { ITweet } from '../../../types/tweet';
 import EPublicMetrics from '../../../types/publicMetrics';
-import ESortByDate from '../../../types/sortBy';
+import { ESortByDate } from '../../../types/sortBy';
 
 export default async function searchTweets(
 	time: ETimeRange,

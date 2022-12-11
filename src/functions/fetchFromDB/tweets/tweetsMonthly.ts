@@ -1,7 +1,12 @@
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import ETimeRange from '../../../types/timeRange';
+import { ICountMonthly } from '../../../types/api';
 
-export default async function tweetsMonthly(time, usernames) {
+export default async function tweetsMonthly(
+	time: ETimeRange,
+	usernames: string[],
+): Promise<ICountMonthly[]> {
 	const $match = matchCreator(time, usernames);
 	return Tweets.aggregate([
 		{ $match },

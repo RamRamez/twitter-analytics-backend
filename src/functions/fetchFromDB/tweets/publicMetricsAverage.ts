@@ -1,11 +1,12 @@
 import { matchCreator } from '../../../lib/helpers';
 import ETimeRange from '../../../types/timeRange';
 import Tweets from '../../../models/tweetModelV2';
+import { IPublicMetricsAverage } from '../../../types/api';
 
 export default async function publicMetricsAverage(
 	time?: ETimeRange,
 	usernames?: string[],
-) {
+): Promise<IPublicMetricsAverage> {
 	const $match = matchCreator(time, usernames);
 	$match.public_metrics = { $exists: true };
 	return Tweets.aggregate([

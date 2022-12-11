@@ -1,8 +1,13 @@
 import countTweetOnly from './countTweetOnly';
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import ETimeRange from '../../../types/timeRange';
+import { ITweetsType } from '../../../types/api';
 
-export default async function tweetsTypes(time, usernames) {
+export default async function tweetsTypes(
+	time: ETimeRange,
+	usernames: string[],
+): Promise<ITweetsType[]> {
 	const $match = matchCreator(time, usernames);
 	const tweetOnly = await countTweetOnly(time);
 	const referenced = await Tweets.aggregate([

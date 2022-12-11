@@ -1,6 +1,8 @@
-enum ESortByDate {
+export enum ESortByDate {
 	newest = 'newest',
 	oldest = 'oldest',
 }
 
-export default ESortByDate;
+export interface ISortBy {
+	[key: string]: 1 | -1;
+}

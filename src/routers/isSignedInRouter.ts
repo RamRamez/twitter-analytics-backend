@@ -4,7 +4,7 @@ import { formatResponse } from '../lib/helpers';
 const isSignedInRouter = Router();
 
 isSignedInRouter.get('/', (req, res) => {
-	if (req.session.user) {
+	if (req.session?.user) {
 		res.send({
 			name: req.session.user.name,
 			role: req.session.user.role,

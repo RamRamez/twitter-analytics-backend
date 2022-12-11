@@ -1,6 +1,7 @@
 import { TTweetTypes } from '../../../types/referencedTweetsType';
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import { IRetweetAvg } from '../../../types/api';
 
 export default async function retweetAvgMonthly(
 	usernames?: string[],
@@ -8,7 +9,7 @@ export default async function retweetAvgMonthly(
 	fromDate?: string,
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
-) {
+): Promise<IRetweetAvg[]> {
 	const $match = matchCreator(
 		undefined,
 		usernames,

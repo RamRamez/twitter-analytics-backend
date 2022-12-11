@@ -1,6 +1,7 @@
 import { TTweetTypes } from '../../../types/referencedTweetsType';
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import { IWordCloud } from '../../../types/api';
 
 export default async function wordCloud(
 	usernames?: string[],
@@ -8,7 +9,7 @@ export default async function wordCloud(
 	fromDate?: string,
 	toDate?: string,
 	tweetTypes?: TTweetTypes[],
-) {
+): Promise<IWordCloud[]> {
 	const $match = matchCreator(
 		undefined,
 		usernames,

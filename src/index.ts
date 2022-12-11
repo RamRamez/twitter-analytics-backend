@@ -20,7 +20,7 @@ async function main() {
 		if (!logExists) {
 			writeFileSync(global.logFile, '');
 		}
-		await App();
+		App();
 	} catch (error) {
 		handleLog(error, 'main');
 	}

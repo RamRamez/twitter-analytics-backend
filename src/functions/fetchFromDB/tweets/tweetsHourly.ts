@@ -1,7 +1,8 @@
 import { matchCreator } from '../../../lib/helpers';
 import Tweets from '../../../models/tweetModelV2';
+import { ITweetsHourly } from '../../../types/api';
 
-export default async function tweetsHourly(time, usernames) {
+export default async function tweetsHourly(time, usernames): Promise<ITweetsHourly[]> {
 	const $match = matchCreator(time, usernames);
 	return Tweets.aggregate([
 		{ $match },

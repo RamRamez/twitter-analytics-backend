@@ -5,7 +5,7 @@ import Tweets from '../../../models/tweetModelV2';
 export default async function uniqueHashtagsCount(
 	time: ETimeRange,
 	usernames?: string[],
-) {
+): Promise<number> {
 	const match = matchCreator(time, usernames);
 	match['entities.hashtags'] = { $exists: true, $ne: [] };
 	return Tweets.find(match)

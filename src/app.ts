@@ -12,7 +12,7 @@ config();
 
 const { DB_URI, BACKEND_PORT, FRONTEND_URL, SESSION_SECRET } = process.env;
 
-export default async function App() {
+export default function App() {
 	const app = express();
 	app.use(
 		cors({
